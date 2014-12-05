@@ -223,7 +223,7 @@
 ! Producing name for binary density file for the circumplanetary disk
 !-----------------------------------------------------------------------
 
-     subroutine createcircumplanetarybinaryfilename(i,filename)
+     subroutine create_circumplanetary_den_binaryfilename(i,filename)
 !    input variables
      integer           :: i
 !    output variables
@@ -257,7 +257,7 @@
 ! Producing name for binary vx file for the circumplanetary disk
 !-----------------------------------------------------------------------
 
-     subroutine createcircumplanetarybinaryfilename(i,filename)
+     subroutine create_circumplanetary_vx_binaryfilename(i,filename)
 !    input variables
      integer           :: i
 !    output variables
@@ -269,19 +269,19 @@
 
         if (i.lt.10) then
               write(ix,'(I1)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasvx'//trim(ix)//'.dat'
         endif
         if ((i.ge.10).and.(i.lt.100)) then
               write(ix,'(I2)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasvx'//trim(ix)//'.dat'
         endif
         if ((i.ge.100).and.(i.lt.1000)) then
               write(ix,'(I3)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasvx'//trim(ix)//'.dat'
         endif
         if ((i.ge.1000)) then
               write(ix,'(I4)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasvx'//trim(ix)//'.dat'
         endif
 
         call system('cd ..')
@@ -291,7 +291,7 @@
 ! Producing name for binary vy file for the circumplanetary disk
 !-----------------------------------------------------------------------
 
-     subroutine createcircumplanetarybinaryfilename(i,filename)
+     subroutine create_circumplanetary_vy_binaryfilename(i,filename)
 !    input variables
      integer           :: i
 !    output variables
@@ -303,19 +303,19 @@
 
         if (i.lt.10) then
               write(ix,'(I1)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasvy'//trim(ix)//'.dat'
         endif
         if ((i.ge.10).and.(i.lt.100)) then
               write(ix,'(I2)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasvy'//trim(ix)//'.dat'
         endif
         if ((i.ge.100).and.(i.lt.1000)) then
               write(ix,'(I3)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasvy'//trim(ix)//'.dat'
         endif
         if ((i.ge.1000)) then
               write(ix,'(I4)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasvy'//trim(ix)//'.dat'
         endif
 
         call system('cd ..')
@@ -326,7 +326,7 @@
 ! Producing name for binary vz file for the circumplanetary disk
 !-----------------------------------------------------------------------
 
-     subroutine createcircumplanetarybinaryfilename(i,filename)
+     subroutine create_circumplanetary_vz_binaryfilename(i,filename)
 !    input variables
      integer           :: i
 !    output variables
@@ -338,19 +338,19 @@
 
         if (i.lt.10) then
               write(ix,'(I1)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasvz'//trim(ix)//'.dat'
         endif
         if ((i.ge.10).and.(i.lt.100)) then
               write(ix,'(I2)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasvz'//trim(ix)//'.dat'
         endif
         if ((i.ge.100).and.(i.lt.1000)) then
               write(ix,'(I3)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasvz'//trim(ix)//'.dat'
         endif
         if ((i.ge.1000)) then
               write(ix,'(I4)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasvz'//trim(ix)//'.dat'
         endif
 
         call system('cd ..')
@@ -361,7 +361,7 @@
 ! Producing name for binary energy file for the circumplanetary disk
 !-----------------------------------------------------------------------
 
-     subroutine createcircumplanetarybinaryfilename(i,filename)
+     subroutine create_circumplanetary_ene_binaryfilename(i,filename)
 !    input variables
      integer           :: i
 !    output variables
@@ -373,19 +373,19 @@
 
         if (i.lt.10) then
               write(ix,'(I1)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasenergy'//trim(ix)//'.dat'
         endif
         if ((i.ge.10).and.(i.lt.100)) then
               write(ix,'(I2)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasenergy'//trim(ix)//'.dat'
         endif
         if ((i.ge.100).and.(i.lt.1000)) then
               write(ix,'(I3)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasenergy'//trim(ix)//'.dat'
         endif
         if ((i.ge.1000)) then
               write(ix,'(I4)') i
-        filename='gasdens'//trim(ix)//'.dat'
+        filename='gasenergy'//trim(ix)//'.dat'
         endif
 
         call system('cd ..')
