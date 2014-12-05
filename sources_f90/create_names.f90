@@ -30,6 +30,132 @@
      end subroutine
 
 !-------------------------------------------------------------
+! Producing name for binary vr file
+!-------------------------------------------------------------
+
+     subroutine createvybinaryfilename(i,filename)
+!    input variables
+     integer           :: i
+!    output variables
+     character(len=15) :: filename
+!    subroutine variables
+     character(len=4)  :: ix
+
+        if (i.lt.10) then
+              write(ix,'(I1)') i
+        filename='gasvy'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.10).and.(i.lt.100)) then
+              write(ix,'(I2)') i
+        filename='gasvy'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.100).and.(i.lt.1000)) then
+              write(ix,'(I3)') i
+        filename='gasvy'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.1000)) then
+              write(ix,'(I4)') i
+        filename='gasvy'//trim(ix)//'.dat'
+        endif
+
+     end subroutine
+
+!-------------------------------------------------------------
+! Producing name for binary vtheta file
+!-------------------------------------------------------------
+
+     subroutine createvxbinaryfilename(i,filename)
+!    input variables
+     integer           :: i
+!    output variables
+     character(len=15) :: filename
+!    subroutine variables
+     character(len=4)  :: ix
+
+        if (i.lt.10) then
+              write(ix,'(I1)') i
+        filename='gasvx'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.10).and.(i.lt.100)) then
+              write(ix,'(I2)') i
+        filename='gasvx'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.100).and.(i.lt.1000)) then
+              write(ix,'(I3)') i
+        filename='gasvx'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.1000)) then
+              write(ix,'(I4)') i
+        filename='gasvx'//trim(ix)//'.dat'
+        endif
+
+     end subroutine
+
+!-------------------------------------------------------------
+! Producing name for binary vz file
+!-------------------------------------------------------------
+
+     subroutine createvzbinaryfilename(i,filename)
+!    input variables
+     integer           :: i
+!    output variables
+     character(len=15) :: filename
+!    subroutine variables
+     character(len=4)  :: ix
+
+        if (i.lt.10) then
+              write(ix,'(I1)') i
+        filename='gasvz'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.10).and.(i.lt.100)) then
+              write(ix,'(I2)') i
+        filename='gasvz'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.100).and.(i.lt.1000)) then
+              write(ix,'(I3)') i
+        filename='gasvz'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.1000)) then
+              write(ix,'(I4)') i
+        filename='gasvz'//trim(ix)//'.dat'
+        endif
+
+     end subroutine
+
+!-------------------------------------------------------------
+! Producing name for binary energy file
+!-------------------------------------------------------------
+
+     subroutine createenergybinaryfilename(i,filename)
+!    input variables
+     integer           :: i
+!    output variables
+     character(len=15) :: filename
+!    subroutine variables
+     character(len=4)  :: ix
+
+        if (i.lt.10) then
+              write(ix,'(I1)') i
+        filename='gasenergy'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.10).and.(i.lt.100)) then
+              write(ix,'(I2)') i
+        filename='gasenergy'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.100).and.(i.lt.1000)) then
+              write(ix,'(I3)') i
+        filename='gasenergy'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.1000)) then
+              write(ix,'(I4)') i
+        filename='gasenergy'//trim(ix)//'.dat'
+        endif
+
+     end subroutine
+
+
+
+!-------------------------------------------------------------
 ! Producing name for density as a human readable file .txt
 ! Outputs files containing X Y Z and density
 !-------------------------------------------------------------
@@ -62,8 +188,108 @@
      end subroutine
 
 !-------------------------------------------------------------
-! Producing name for binary density file
+! Producing names of csv files
 !-------------------------------------------------------------
+
+     subroutine create_csv_files(i,filename)
+!    input variables
+     integer           :: i
+!    output variables
+     character(len=15) :: filename
+!    subroutine variables
+     character(len=4)  :: ix
+
+        if (i.lt.10) then
+              write(ix,'(I1)') i
+        filename='disk'//trim(ix)//'.csv'
+        endif
+        if ((i.ge.10).and.(i.lt.100)) then
+              write(ix,'(I2)') i
+        filename='disk'//trim(ix)//'.csv'
+        endif
+        if ((i.ge.100).and.(i.lt.1000)) then
+              write(ix,'(I3)') i
+        filename='disk'//trim(ix)//'.csv'
+        endif
+        if ((i.ge.1000)) then
+              write(ix,'(I4)') i
+        filename='disk'//trim(ix)//'.csv'
+        endif
+
+     end subroutine
+
+
+!----------------------------------------------------------------------
+! Producing name for binary density file for the circumplanetary disk
+!-----------------------------------------------------------------------
+
+     subroutine createcircumplanetarybinaryfilename(i,filename)
+!    input variables
+     integer           :: i
+!    output variables
+     character(len=15) :: filename
+!    subroutine variables
+     character(len=4)  :: ix
+
+        call system('cd circumplanetary_data')
+
+        if (i.lt.10) then
+              write(ix,'(I1)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.10).and.(i.lt.100)) then
+              write(ix,'(I2)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.100).and.(i.lt.1000)) then
+              write(ix,'(I3)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.1000)) then
+              write(ix,'(I4)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+
+        call system('cd ..')
+
+     end subroutine
+!----------------------------------------------------------------------
+! Producing name for binary vx file for the circumplanetary disk
+!-----------------------------------------------------------------------
+
+     subroutine createcircumplanetarybinaryfilename(i,filename)
+!    input variables
+     integer           :: i
+!    output variables
+     character(len=15) :: filename
+!    subroutine variables
+     character(len=4)  :: ix
+
+        call system('cd circumplanetary_data')
+
+        if (i.lt.10) then
+              write(ix,'(I1)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.10).and.(i.lt.100)) then
+              write(ix,'(I2)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.100).and.(i.lt.1000)) then
+              write(ix,'(I3)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.1000)) then
+              write(ix,'(I4)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+
+        call system('cd ..')
+
+     end subroutine
+!----------------------------------------------------------------------
+! Producing name for binary vy file for the circumplanetary disk
+!-----------------------------------------------------------------------
 
      subroutine createcircumplanetarybinaryfilename(i,filename)
 !    input variables
@@ -97,23 +323,91 @@
      end subroutine
 
 !----------------------------------------------------------------------
+! Producing name for binary vz file for the circumplanetary disk
+!-----------------------------------------------------------------------
+
+     subroutine createcircumplanetarybinaryfilename(i,filename)
+!    input variables
+     integer           :: i
+!    output variables
+     character(len=15) :: filename
+!    subroutine variables
+     character(len=4)  :: ix
+
+        call system('cd circumplanetary_data')
+
+        if (i.lt.10) then
+              write(ix,'(I1)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.10).and.(i.lt.100)) then
+              write(ix,'(I2)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.100).and.(i.lt.1000)) then
+              write(ix,'(I3)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.1000)) then
+              write(ix,'(I4)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+
+        call system('cd ..')
+
+     end subroutine
+
+!----------------------------------------------------------------------
+! Producing name for binary energy file for the circumplanetary disk
+!-----------------------------------------------------------------------
+
+     subroutine createcircumplanetarybinaryfilename(i,filename)
+!    input variables
+     integer           :: i
+!    output variables
+     character(len=15) :: filename
+!    subroutine variables
+     character(len=4)  :: ix
+
+        call system('cd circumplanetary_data')
+
+        if (i.lt.10) then
+              write(ix,'(I1)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.10).and.(i.lt.100)) then
+              write(ix,'(I2)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.100).and.(i.lt.1000)) then
+              write(ix,'(I3)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+        if ((i.ge.1000)) then
+              write(ix,'(I4)') i
+        filename='gasdens'//trim(ix)//'.dat'
+        endif
+
+        call system('cd ..')
+
+     end subroutine
+
+
+!----------------------------------------------------------------------
 !This subroutine will create the p2cplot.gpl authomatically, with the
 !aim to adapt it to the type of plot
 !----------------------------------------------------------------------
 
-subroutine create_gpl_file(NX,NY,NZ,limits,ptype,ind,mydirsetup)
+subroutine create_gpl_file(NX,NY,NZ,limits,ptype,ind)
 
  implicit none
 
  real*8 :: limits(6)
  integer :: NX,NY,NZ
  character(1) :: ptype
- character(99) :: mydirsetup
- character(1) :: symbol
  integer :: ind 
  real*4 :: cut, vmin, vmax, rsize
 
- symbol = '/'
  !check what cut is
  if ( ptype == 'z' ) then
   vmax = limits(6); vmin = limits(5)
@@ -128,12 +422,11 @@ subroutine create_gpl_file(NX,NY,NZ,limits,ptype,ind,mydirsetup)
  !open the file
  open(17,file='p2cplot.gpl',status='unknown')
 
- write(17,*),'#This file was created automatically by the main program'
+ write(17,*),'#This file was created automathically by the main program'
  write(17,*),'#You can modify it if you want'
  write(17,*),''
  write(17,*),'set terminal pngcairo size 800,800'
- write(17,*),'set output ''../outputs/'//trim(mydirsetup)//symbol//'images'//symbol//'cartesiandiskxxxx.png'''
- !write(17,*),'set output ''images/cartesiandiskxxxx.png'' '
+ write(17,*),'set output ''images/cartesiandiskxxxx.png'' '
 ! write(17,*),'set lmargin at screen 0.05'
 ! write(17,*),'set rmargin at screen 0.85'
 ! write(17,*),'set bmargin at screen 0.1'
@@ -161,8 +454,7 @@ subroutine create_gpl_file(NX,NY,NZ,limits,ptype,ind,mydirsetup)
    write(17,*),'set title ''Cut at theta = ',cut,' '''
  end if
  write(17,*),'set palette rgb 34,35,36'
- write(17,*),'filename = ''../outputs/'//trim(mydirsetup)//symbol//'cartesiantxt'//symbol//'gasdensxxxx.txt'''
- !write(17,*),'filename = ''cartesiantxt/gasdensxxxx.txt'''
+ write(17,*),'filename = ''cartesiantxt/gasdensxxxx.txt'''
  write(17,*),'splot filename u 1:2:3'
 
  close(17)

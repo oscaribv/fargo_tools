@@ -23,6 +23,8 @@ program CIRCUMPLANETARY
   !Local Variables
   integer :: i,j,k
   real*8, allocatable  :: bindata(:)
+  !variables to read the original bin files
+  real*8, allocatable  :: dendata(:), vrdata(:), vtdata(:), vzdata(:), endata(:)
   character(len=15) :: filenametxt
   character(len=15) :: filenamebinary
   integer :: itertot
@@ -36,6 +38,8 @@ program CIRCUMPLANETARY
   integer :: sizex, sizey, sizez
   real :: xmin, xmax, ymin, ymax, zmin, zmax, dx, dy, dz
   real*8, allocatable :: xdata(:)
+  !c for circumplanetary data bin files
+  real*8, allocatable  :: cdendata(:), cvrdata(:), cvtdata(:), cvzdata(:), cendata(:)
 
   !START THE MPI CALL
   call MPI_INIT(ierr)
@@ -47,11 +51,11 @@ program CIRCUMPLANETARY
   !Let the first processor do all this work
   if ( rank == 0 ) then
 
-  !call system('rm -r circumplanetary_data')
-  call system('mkdir circumplanetary_data')
+   !call system('rm -r circumplanetary_data')
+   call system('mkdir circumplanetary_data')
 
-  !Read the data form the input_circumplanetary.dat file
-  call read_input_circumplanetary(NXYZ,itertot, limits, ENES)
+   !Read the data form the input_circumplanetary.dat file
+   call read_input_circumplanetary(NXYZ,itertot, limits, ENES)
 
   end if
 
@@ -129,12 +133,26 @@ program CIRCUMPLANETARY
  
   end if  
 
-
   !allocate bindata that contains all the data of all the grid
   allocate( bindata(NX*NY*NZ) )
+  !Let's allocate the memory for read the binary data
+  allocate(dendata(NX*NY*NZ))
+  allocate(vrdata (NX*NY*NZ))
+  allocate(vtdata (NX*NY*NZ))
+  allocate(vzdata (NX*NY*NZ))
+  allocate(endata (NX*NY*NZ))
+
+
   !allocate xdata (circumplanetary) of the new nize
   !We call it out the do, sice it will recycled for each processor in each iter
   allocate( xdata(sizex*sizey*sizez) ) 
+
+  allocate( cdendata(sizex*sizey*sizez) ) 
+  allocate( cvrdata (sizex*sizey*sizez) ) 
+  allocate( cvtdata (sizex*sizey*sizez) ) 
+  allocate( cvzdata (sizex*sizey*sizez) ) 
+  allocate( cendata (sizex*sizey*sizez) ) 
+
 
   !Let's divide all the work between all the processors
   iter = rank + 1
@@ -153,15 +171,68 @@ program CIRCUMPLANETARY
        recl = NX*NY*NZ*8)
 
   !Reading file
-  read(100,rec=1) bindata
+  read(100,rec=1) dendata
+  close(100)
+
+  !create vx (vr) data
+  call createvybinaryfilename(iter,filenamebinary)
+  !Opening density binary file
+  open(unit=100, status="old", file=filenamebinary, form="unformatted",
+access="direct", recl = NX*NY*NZ*8)
+  !Reading density file
+  read(100,rec=1) vrdata
+  close(100)
+
+  !create vy data
+  call createvxbinaryfilename(iter,filenamebinary)
+  !Opening density binary file
+  open(unit=100, status="old", file=filenamebinary, form="unformatted",
+access="direct", recl = NX*NY*NZ*8)
+  !Reading density file
+  read(100,rec=1) vtdata
+  close(100)
+
+  !create vz data
+  call createvzbinaryfilename(iter,filenamebinary)
+  !Opening density binary file
+  open(unit=100, status="old", file=filenamebinary, form="unformatted",
+access="direct", recl = NX*NY*NZ*8)
+  !Reading density file
+  read(100,rec=1) vzdata
+  close(100)
+
+  !create energy data
+  call createenergybinaryfilename(iter,filenamebinary)
+  !Opening density binary file
+  open(unit=100, status="old", file=filenamebinary, form="unformatted",
+access="direct", recl = NX*NY*NZ*8)
+  !Reading density file
+  read(100,rec=1) endata
   close(100)
 
   !Read from data the data that I want and store it in xdata
   do k = NZmin, NZmax  
     do j = NYmin, NYmax  
       do i = NXmin, NXmax  
-        xdata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
-        = bindata(i+(j-1)*NX+(k-1)*NX*NY)
+
+        !xdata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
+        != bindata(i+(j-1)*NX+(k-1)*NX*NY)
+
+        cdendata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
+        = dendata(i+(j-1)*NX+(k-1)*NX*NY)
+
+        cvrdata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
+        = vrdata(i+(j-1)*NX+(k-1)*NX*NY)
+
+        cvtdata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
+        = vtdata(i+(j-1)*NX+(k-1)*NX*NY)
+
+        cvzdata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
+        = vzdata(i+(j-1)*NX+(k-1)*NX*NY)
+
+        cendata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
+        = endata(i+(j-1)*NX+(k-1)*NX*NY)
+
       end do
     end do
   end do
@@ -188,6 +259,17 @@ program CIRCUMPLANETARY
   !deallocate the vector bindata and xdata
   deallocate(bindata)
   deallocate(xdata)
+
+  deallocate(dendata )
+  deallocate(vrdata  )
+  deallocate(vtdata  )
+  deallocate(vzdata  )
+  deallocate(endata  )
+  deallocate(cdendata)
+  deallocate(cvrdata )
+  deallocate(cvtdata )
+  deallocate(cvzdata )
+  deallocate(cendata )
 
   !Wait until all the processors finish
   call MPI_BARRIER(MPI_COMM_WORLD,ierr) 
