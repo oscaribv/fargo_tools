@@ -30,7 +30,7 @@ program CIRCUMPLANETARY
   integer :: itertot
   real*8 :: limits(6) ! xmin, xmax, ymin, ymax, zmin, zmax
   character(100) :: table
-  character(15) :: filecircumplanetary
+ character(15) :: filecircumplanetary
   integer :: iter, ind
   character(1) :: ptype
   integer :: ENES(6), NXmin, NXmax, NYmin, NYmax, NZmin, NZmax
@@ -134,8 +134,8 @@ program CIRCUMPLANETARY
   end if  
 
   !allocate bindata that contains all the data of all the grid
-  allocate( bindata(NX*NY*NZ) )
   !Let's allocate the memory for read the binary data
+  allocate( bindata(NX*NY*NZ) )
   allocate(dendata(NX*NY*NZ))
   allocate(vxdata (NX*NY*NZ))
   allocate(vydata (NX*NY*NZ))
