@@ -10,6 +10,10 @@
 
 program CIRCUMPLANETARY
 
+!-----------------------------------------------------------------
+!       Variables declaration                                   --
+!-----------------------------------------------------------------
+
   implicit none
   !INCLUDE THE MPI LIBRARY
   include "mpif.h"
@@ -22,11 +26,13 @@ program CIRCUMPLANETARY
 
   !Local Variables
   integer :: i,j,k
-  real*8, allocatable  :: bindata(:)
   !variables to read the original bin files
   real*8, allocatable  :: dendata(:), vxdata(:), vydata(:), vzdata(:), endata(:)
-  character(len=15) :: filenametxt
-  character(len=15) :: filenamebinary
+  !c for circumplanetary data bin files
+  real*8, allocatable  :: cdendata(:), cvxdata(:), cvydata(:), cvzdata(:), cendata(:)
+  !names for the binary files
+  character(len=15) :: filenametxt, filenamebinary
+  !number of iterations, same as number of set of files in FARGO3D
   integer :: itertot
   real*8 :: limits(6) ! xmin, xmax, ymin, ymax, zmin, zmax
   character(100) :: table
@@ -38,8 +44,6 @@ program CIRCUMPLANETARY
   integer :: sizex, sizey, sizez
   real :: xmin, xmax, ymin, ymax, zmin, zmax, dx, dy, dz
   real*8, allocatable :: xdata(:)
-  !c for circumplanetary data bin files
-  real*8, allocatable  :: cdendata(:), cvxdata(:), cvydata(:), cvzdata(:), cendata(:)
 
   !START THE MPI CALL
   call MPI_INIT(ierr)
@@ -51,7 +55,8 @@ program CIRCUMPLANETARY
   !Let the first processor do all this work
   if ( rank == 0 ) then
 
-   !call system('rm -r circumplanetary_data')
+   !Let's be sure that the directory is free
+   call system('rm -r circumplanetary_data')
    call system('mkdir circumplanetary_data')
 
    !Read the data form the input_circumplanetary.dat file
@@ -84,10 +89,12 @@ program CIRCUMPLANETARY
 
   !put the values in an easier readable way
 
+  !Taking the dimenssions of the original binary arrray
   NX = NXYZ(1)
   NY = NXYZ(2)
   NZ = NXYZ(3)
 
+  !These are the limits where the original array will be cut
   NXmin = ENES(1)
   NXmax = ENES(2)
   NYmin = ENES(3)
@@ -95,17 +102,17 @@ program CIRCUMPLANETARY
   NZmin = ENES(5)
   NZmax = ENES(6)
 
+  !These are the dimenssions of the new binary array
   sizex = NXmax - NXmin + 1
   sizey = NYmax - NYmin + 1
   sizez = NZmax - NZmin + 1
 
+  !These are the jumps in each directions, just for equally espaced jumps!
   dx = ( limits(2) - limits(1) ) / (NX - 1)
   dy = ( limits(4) - limits(3) ) / (NY - 1)
   dz = ( limits(6) - limits(5) ) / (NZ - 1)
 
-  print*,limits
-  print*,dx,dy,dz
-
+  !Get the new grid limits taking in account the position when we want to cut
   xmin = limits(1) + (NXmin - 1) * dx  
   xmax = limits(1) + (NXmax - 1) * dx  
   ymin = limits(3) + (NYmin - 1) * dy  
@@ -113,46 +120,40 @@ program CIRCUMPLANETARY
   zmin = limits(5) + (NZmin - 1) * dz  
   zmax = limits(5) + (NZmax - 1) * dz  
 
-  print*,'news'
-  print*,xmin,xmax,ymin,ymax,zmin,zmax
 
   if ( rank == 0 ) then
 
-  !create input.dat to run the output files of this program
-  !with readbinaryall.f90
-  open(13,file='circumplanetary_data/input.dat')
+    !create input.dat to run the output files of this program
+    !with readbinaryall.f90 or trans_to_csv.f90
+    open(13,file='circumplanetary_data/input.dat')
    
-    write(13,*),sizex,'    !NX' 
-    write(13,*),sizey,'    !NY' 
-    write(13,*),sizez,'    !NZ' 
-    write(13,*),itertot, '    !itertot'
-    write(13,*),xmin, '    !theta min' 
-    write(13,*),xmax, '    !theta max' 
-    write(13,*),ymin, '    !r min' 
-    write(13,*),ymax, '    !r max' 
-    write(13,*),zmin, '    !z min' 
-    write(13,*),zmax, '    !zmax' 
-    write(13,*),'z    !type of plot' 
-    write(13,*),'1    !make cut here' 
+      write(13,*),sizex,'    !NX' 
+      write(13,*),sizey,'    !NY' 
+      write(13,*),sizez,'    !NZ' 
+      write(13,*),itertot, '    !itertot'
+      write(13,*),xmin, '    !theta min' 
+      write(13,*),xmax, '    !theta max' 
+      write(13,*),ymin, '    !r min' 
+      write(13,*),ymax, '    !r max' 
+      write(13,*),zmin, '    !z min' 
+      write(13,*),zmax, '    !zmax' 
+      write(13,*),'z    !type of plot' 
+      write(13,*),'1    !make cut here' 
 
-  close(13)
+    close(13)
  
   end if  
 
   !allocate bindata that contains all the data of all the grid
   !Let's allocate the memory for read the binary data
-  allocate( bindata(NX*NY*NZ) )
-  allocate(dendata(NX*NY*NZ))
-  allocate(vxdata (NX*NY*NZ))
-  allocate(vydata (NX*NY*NZ))
-  allocate(vzdata (NX*NY*NZ))
-  allocate(endata (NX*NY*NZ))
-
+  allocate( dendata(NX*NY*NZ) )
+  allocate( vxdata (NX*NY*NZ) )
+  allocate( vydata (NX*NY*NZ) )
+  allocate( vzdata (NX*NY*NZ) )
+  allocate( endata (NX*NY*NZ) )
 
   !allocate xdata (circumplanetary) of the new nize
   !We call it out the do, sice it will recycled for each processor in each iter
-  allocate( xdata(sizex*sizey*sizez) ) 
-
   allocate( cdendata(sizex*sizey*sizez) ) 
   allocate( cvxdata (sizex*sizey*sizez) ) 
   allocate( cvydata (sizex*sizey*sizez) ) 
@@ -162,165 +163,159 @@ program CIRCUMPLANETARY
 
   !Let's divide all the work between all the processors
   iter = rank + 1
+
   do while ( iter <= itertot )  
 
-  print*,'iter = ',iter,' in processor ',rank + 1
+    print*,'iter = ',iter,' in processor ',rank + 1
 
-  call createdensitybinaryfilename(iter,filenamebinary)
-  
-  !Opening binary file
-  open(unit=100,                 &
-       status="old",             &
-       file=filenamebinary,      &
-       form="unformatted",       &
-       access="direct",          &
-       recl = NX*NY*NZ*8)
+!----------------------------------------------------------------------
+!       Reading the original binary files
+!----------------------------------------------------------------------
 
-  !Reading file
-  read(100,rec=1) dendata
-  close(100)
+    !creating gasdensxxxx.dat name inside filenamebinary
+    call createdensitybinaryfilename(iter,filenamebinary)
+    !Opening binary file
+    open(unit=100, status="old", file=filenamebinary, form="unformatted", &
+         access="direct", recl = NX*NY*NZ*8)
+    !Reading density file
+    read(100,rec=1) dendata
+    close(100)
+    !binary density file is closed and it is stored in RAM
 
-  !create vx data
-  call createvxbinaryfilename(iter,filenamebinary)
-  !Opening density binary file
-  open(unit=100, status="old", file=filenamebinary, form="unformatted", &
-access="direct", recl = NX*NY*NZ*8)
-  !Reading density file
-  read(100,rec=1) vxdata
-  close(100)
+    !creating gasvxxxxx.dat name inside filenamebinary
+    call createvxbinaryfilename(iter,filenamebinary)
+    !Opening binary file
+    open(unit=100, status="old", file=filenamebinary, form="unformatted", &
+         access="direct", recl = NX*NY*NZ*8)
+    !Reading vx file
+    read(100,rec=1) vxdata
+    close(100)
+    !binary vx file is closed and it is stored in RAM
 
-  !create vy data
-  call createvybinaryfilename(iter,filenamebinary)
-  !Opening density binary file
-  open(unit=100, status="old", file=filenamebinary, form="unformatted", &
-access="direct", recl = NX*NY*NZ*8)
-  !Reading density file
-  read(100,rec=1) vydata
-  close(100)
+    !creating gasvyxxxx.dat name inside filenamebinary
+    call createvybinaryfilename(iter,filenamebinary)
+    !Opening vy binary file
+    open(unit=100, status="old", file=filenamebinary, form="unformatted", &
+         access="direct", recl = NX*NY*NZ*8)
+    !Reading vy file
+    read(100,rec=1) vydata
+    close(100)
+    !binary vy file is closed and it is stored in RAM
 
-  !create vz data
-  call createvzbinaryfilename(iter,filenamebinary)
-  !Opening density binary file
-  open(unit=100, status="old", file=filenamebinary, form="unformatted", &
-access="direct", recl = NX*NY*NZ*8)
-  !Reading density file
-  read(100,rec=1) vzdata
-  close(100)
+    !creating gasvzxxxx.dat name inside filenamebinary
+    call createvzbinaryfilename(iter,filenamebinary)
+    !Opening vz binary file
+    open(unit=100, status="old", file=filenamebinary, form="unformatted", &
+         access="direct", recl = NX*NY*NZ*8)
+    !Reading vz file
+    read(100,rec=1) vzdata
+    close(100)
+    !binary vz file is closed and it is stored in RAM
 
-  !create energy data
-  call createenergybinaryfilename(iter,filenamebinary)
-  !Opening density binary file
-  open(unit=100, status="old", file=filenamebinary, form="unformatted", &
-access="direct", recl = NX*NY*NZ*8)
-  !Reading density file
-  read(100,rec=1) endata
-  close(100)
+    !creating gasenergyxxxx.dat name inside filenamebinary
+    call createenergybinaryfilename(iter,filenamebinary)
+    !Opening energy binary file
+    open(unit=100, status="old", file=filenamebinary, form="unformatted", &
+         access="direct", recl = NX*NY*NZ*8)
+    !Reading energy file
+    read(100,rec=1) endata
+    close(100)
+    !binary energy file is closed and it is stored in RAM
 
-  !Read from data the data that I want and store it in xdata
-  do k = NZmin, NZmax  
-    do j = NYmin, NYmax  
-      do i = NXmin, NXmax  
 
-        cdendata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
-        = dendata(i+(j-1)*NX+(k-1)*NX*NY)
+!----------------------------------------------------------------------
+!       Now all the original binary files are stored in RAM
+!----------------------------------------------------------------------
+!       Let's take the data that we want, previously we decided this
+!       when we choose the NXmin, Mxmax, etc.
+!----------------------------------------------------------------------
 
-        cvxdata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
-        = vxdata(i+(j-1)*NX+(k-1)*NX*NY)
+    !Reading from *data variables to c*data variables
+    do k = NZmin, NZmax  
+      do j = NYmin, NYmax  
+        do i = NXmin, NXmax  
 
-        cvydata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
-        = vydata(i+(j-1)*NX+(k-1)*NX*NY)
+          cdendata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
+          = dendata(i+(j-1)*NX+(k-1)*NX*NY)
 
-        cvzdata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
-        = vzdata(i+(j-1)*NX+(k-1)*NX*NY)
+          cvxdata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
+          = vxdata(i+(j-1)*NX+(k-1)*NX*NY)
 
-        cendata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
-        = endata(i+(j-1)*NX+(k-1)*NX*NY)
+          cvydata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
+          = vydata(i+(j-1)*NX+(k-1)*NX*NY)
 
+          cvzdata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
+          = vzdata(i+(j-1)*NX+(k-1)*NX*NY)
+
+          cendata((i-NXmin)+(j-NYmin)*sizex+(k-NZmin)*sizex*sizey + 1) & 
+          = endata(i+(j-1)*NX+(k-1)*NX*NY)
+
+        end do
       end do
     end do
-  end do
 
-  !Create a name for the circumplanetary file, the same as the input put inside
-  !a directory called circumplanetary_data
+!----------------------------------------------------------------------
+!       Now all the data that we want is stored in RAM, lets write it
+!       in the hard disk, the names are as the original ones but
+!       inside circumplanetary_data directory
+!----------------------------------------------------------------------
+
   call create_circumplanetary_den_binaryfilename(iter,filecircumplanetary)
   table = 'circumplanetary_data/'//trim(filecircumplanetary)
-  !All the data is stored, lets save the data in circumplanetary in binary files
-  !that only contain the circumplanetary disks structure
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
- 
   write(23,rec=1) cdendata
   !Now the circumplanetary data is stored in a binary file
-
   close(23)
 
-  !Create a name for the circumplanetary file, the same as the input put inside
-  !a directory called circumplanetary_data
   call create_circumplanetary_vx_binaryfilename(iter,filecircumplanetary)
   table = 'circumplanetary_data/'//trim(filecircumplanetary)
-  !All the data is stored, lets save the data in circumplanetary in binary files
-  !that only contain the circumplanetary disks structure
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
- 
   write(23,rec=1) cvxdata
   !Now the circumplanetary data is stored in a binary file
-
   close(23)
 
-
-  !Create a name for the circumplanetary file, the same as the input put inside
-  !a directory called circumplanetary_data
   call create_circumplanetary_vy_binaryfilename(iter,filecircumplanetary)
   table = 'circumplanetary_data/'//trim(filecircumplanetary)
-  !All the data is stored, lets save the data in circumplanetary in binary files
-  !that only contain the circumplanetary disks structure
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
- 
   write(23,rec=1) cvydata
   !Now the circumplanetary data is stored in a binary file
-
   close(23)
 
-
-  !Create a name for the circumplanetary file, the same as the input put inside
-  !a directory called circumplanetary_data
   call create_circumplanetary_vz_binaryfilename(iter,filecircumplanetary)
   table = 'circumplanetary_data/'//trim(filecircumplanetary)
-  !All the data is stored, lets save the data in circumplanetary in binary files
-  !that only contain the circumplanetary disks structure
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
- 
   write(23,rec=1) cvzdata
   !Now the circumplanetary data is stored in a binary file
-
   close(23)
 
-
-  !Create a name for the circumplanetary file, the same as the input put inside
-  !a directory called circumplanetary_data
   call create_circumplanetary_ene_binaryfilename(iter,filecircumplanetary)
   table = 'circumplanetary_data/'//trim(filecircumplanetary)
-  !All the data is stored, lets save the data in circumplanetary in binary files
-  !that only contain the circumplanetary disks structure
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
- 
   write(23,rec=1) cendata
-  !Now the circumplanetary data is stored in a binary file
-
   close(23)
 
-
+!----------------------------------------------------------------------
+!       All the data is stored in hard disk now        
+!----------------------------------------------------------------------
 
   !Make a jump as big as the number of processors
   iter = iter + nprocs
 
+!----------------------------------------------------------------------
+!    At this point all the variables that ocupates RAM are recycled
+!----------------------------------------------------------------------
+
   enddo
 
-  !deallocate all the vectors
+!----------------------------------------------------------------------
+!    Deallocate all the vectors
+!----------------------------------------------------------------------
+
   deallocate(dendata )
   deallocate(vxdata  )
   deallocate(vydata  )
@@ -337,5 +332,9 @@ access="direct", recl = NX*NY*NZ*8)
 
   !END MPI CALL
   call MPI_FINALIZE(ierr)
+
+!----------------------------------------------------------------------
+!    THE PROGRAM ENDS HERE
+!----------------------------------------------------------------------
 
 end program CIRCUMPLANETARY
