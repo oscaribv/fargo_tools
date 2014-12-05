@@ -103,12 +103,18 @@ program CIRCUMPLANETARY
   dy = ( limits(4) - limits(3) ) / (NY - 1)
   dz = ( limits(6) - limits(5) ) / (NZ - 1)
 
+  print*,limits
+  print*,dx,dy,dz
+
   xmin = limits(1) + (NXmin - 1) * dx  
   xmax = limits(1) + (NXmax - 1) * dx  
   ymin = limits(3) + (NYmin - 1) * dy  
   ymax = limits(3) + (NYmax - 1) * dy  
   zmin = limits(5) + (NZmin - 1) * dz  
   zmax = limits(5) + (NZmax - 1) * dz  
+
+  print*,'news'
+  print*,xmin,xmax,ymin,ymax,zmin,zmax
 
   if ( rank == 0 ) then
 
