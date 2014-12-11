@@ -129,8 +129,8 @@ subroutine sph2carte(NX,NY,NZ,dendata,vrdata,vazdata,vcoldata,endata,rmin,rmax,a
           dydcol = r * cos(col) * sin(az)
 
           dzdr = cos(col)
-          dzdaz = - r * sin(col)
-          dzdcol = 0.0
+          dzdaz = 0.0
+          dzdcol = - r * sin(col)
 
           !Let's transform the velocities
           vx = dxdr * vr + dxdcol * vcol + dxdaz * vaz         
