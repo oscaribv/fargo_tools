@@ -88,7 +88,7 @@ subroutine sph2carte(NX,NY,NZ,dendata,vrdata,vazdata,vcoldata,endata,rmin,rmax,a
    real*8 :: dzdr, dzdaz, dzdcol
 
    !Open the file
-   open(unit=101, file=filename, status="unknown")
+   open(unit=101, file=trim(filename), status="unknown")
 
    !Calculates the size of the jumps
    dtaz = (azmax - azmin) / real(NX-1) !It must be periodic!

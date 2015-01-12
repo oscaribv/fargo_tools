@@ -105,7 +105,6 @@ program TRANS_TO_CSV
      print*,'iter = ',iter,' in processor ',rank + 1
 
      !create denstiy data
-    !call createdensitybinaryfilename(iter,filenamebinary)
      gasfield = 'gasdens'
      call createfieldbinaryfilename(iter,gasfield,filenamebinary)
      !Opening density binary file
@@ -114,8 +113,7 @@ program TRANS_TO_CSV
         read(100,rec=1) dendata
      close(100)
 
-     !create vx (vr) data
-     !call createvybinaryfilename(iter,filenamebinary)
+     !create vx data
      gasfield = 'gasvx'
      call createfieldbinaryfilename(iter,gasfield,filenamebinary)
      !Opening density binary file
@@ -125,7 +123,6 @@ program TRANS_TO_CSV
      close(100)
 
      !create vy data
-     !call createvxbinaryfilename(iter,filenamebinary)
      gasfield = 'gasvy'
      call createfieldbinaryfilename(iter,gasfield,filenamebinary)
      !Opening density binary file
@@ -135,7 +132,6 @@ program TRANS_TO_CSV
      close(100)
 
      !create vz data
-     !call createvzbinaryfilename(iter,filenamebinary)
      gasfield = 'gasvz'
      call createfieldbinaryfilename(iter,gasfield,filenamebinary)
      !Opening density binary file
@@ -145,7 +141,6 @@ program TRANS_TO_CSV
      close(100)
 
      !create energy data
-     !call createenergybinaryfilename(iter,filenamebinary)
      gasfield = 'gasenergy'
      call createfieldbinaryfilename(iter,gasfield,filenamebinary)
      !Opening density binary file
