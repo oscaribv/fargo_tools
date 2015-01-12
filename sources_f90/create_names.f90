@@ -1,4 +1,41 @@
 !-------------------------------------------------------------
+! Producing name for binary files, the field name as input 
+!-------------------------------------------------------------
+
+     subroutine createfieldbinaryfilename(i,fieldname,filename)
+!    input variables
+     integer           :: i
+!    output variables
+        !Field name can be gasdens, gasvx, gasvy, etc
+     character(len=15) :: fieldname
+     character(len=30) :: filename
+!    subroutine variables
+     character(len=4)  :: ix
+
+        if (i.lt.10) then
+              write(ix,'(I1)') i
+        filename=trim(fieldname)//trim(ix)//'.dat'
+        endif
+        if ((i.ge.10).and.(i.lt.100)) then
+              write(ix,'(I2)') i
+        filename=trim(fieldname)//trim(ix)//'.dat'
+        endif
+        if ((i.ge.100).and.(i.lt.1000)) then
+              write(ix,'(I3)') i
+        filename=trim(fieldname)//trim(ix)//'.dat'
+        endif
+        if ((i.ge.1000)) then
+              write(ix,'(I4)') i
+        filename=trim(fieldname)//trim(ix)//'.dat'
+        endif
+
+     end subroutine
+
+
+
+
+
+!-------------------------------------------------------------
 ! Producing name for binary density file
 !-------------------------------------------------------------
 

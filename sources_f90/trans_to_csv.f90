@@ -21,8 +21,8 @@ program TRANS_TO_CSV
   integer :: i,j,k
   !prepare a vector to allocate the memory
   real*8, allocatable  :: dendata(:), vrdata(:), vtdata(:), vzdata(:), endata(:)
-  character(len=15) :: filenamebinary
-  character(len=15) :: filename_csv, mydirsetup
+  character(len=30) :: filenamebinary
+  character(len=30) :: filename_csv, mydirsetup
   integer :: itertot
   real*8 :: xmin, xmax, ymin, ymax, zmin, zmax
   real*8 :: limits(6) ! xmin, xmax, ymin, ymax, zmin, zmax
@@ -104,7 +104,8 @@ program TRANS_TO_CSV
      print*,'iter = ',iter,' in processor ',rank + 1
 
      !create denstiy data
-     call createdensitybinaryfilename(iter,filenamebinary)
+    !call createdensitybinaryfilename(iter,filenamebinary)
+     call createfieldbinaryfilename(iter,'gasdens',filenamebinary)
      !Opening density binary file
      open(unit=100, status="old", file=filenamebinary, form="unformatted", access="direct", recl = NX*NY*NZ*8) 
         !Reading density file
@@ -112,7 +113,8 @@ program TRANS_TO_CSV
      close(100)
 
      !create vx (vr) data
-     call createvybinaryfilename(iter,filenamebinary)
+     !call createvybinaryfilename(iter,filenamebinary)
+     call createfieldbinaryfilename(iter,'gasvx',filenamebinary)
      !Opening density binary file
      open(unit=100, status="old", file=filenamebinary, form="unformatted", access="direct", recl = NX*NY*NZ*8) 
         !Reading density file
@@ -120,7 +122,8 @@ program TRANS_TO_CSV
      close(100)
 
      !create vy data
-     call createvxbinaryfilename(iter,filenamebinary)
+     !call createvxbinaryfilename(iter,filenamebinary)
+     call createfieldbinaryfilename(iter,'gasvy',filenamebinary)
      !Opening density binary file
      open(unit=100, status="old", file=filenamebinary, form="unformatted", access="direct", recl = NX*NY*NZ*8) 
         !Reading density file
@@ -128,7 +131,8 @@ program TRANS_TO_CSV
      close(100)
 
      !create vz data
-     call createvzbinaryfilename(iter,filenamebinary)
+     !call createvzbinaryfilename(iter,filenamebinary)
+     call createfieldbinaryfilename(iter,'gasvz',filenamebinary)
      !Opening density binary file
      open(unit=100, status="old", file=filenamebinary, form="unformatted", access="direct", recl = NX*NY*NZ*8) 
         !Reading density file
@@ -136,7 +140,8 @@ program TRANS_TO_CSV
      close(100)
 
      !create energy data
-     call createenergybinaryfilename(iter,filenamebinary)
+     !call createenergybinaryfilename(iter,filenamebinary)
+     call createfieldbinaryfilename(iter,'gasenergy',filenamebinary)
      !Opening density binary file
      open(unit=100, status="old", file=filenamebinary, form="unformatted", access="direct", recl = NX*NY*NZ*8) 
         !Reading density file
