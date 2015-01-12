@@ -12,6 +12,8 @@
 !    subroutine variables
      character(len=4)  :: ix
 
+        print*,fieldname
+
         if (i.lt.10) then
               write(ix,'(I1)') i
         filename=trim(fieldname)//trim(ix)//'.dat'
