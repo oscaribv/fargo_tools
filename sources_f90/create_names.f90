@@ -73,7 +73,7 @@
 !    input variables
      integer           :: i
 !    output variables
-     character(len=15) :: filename
+     character(len=30) :: filename
 !    subroutine variables
      character(len=4)  :: ix
 

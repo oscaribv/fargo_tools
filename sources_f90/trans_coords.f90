@@ -76,7 +76,7 @@ subroutine sph2carte(NX,NY,NZ,dendata,vrdata,vazdata,vcoldata,endata,rmin,rmax,a
    integer :: NX, NY, NZ
    real*8, dimension(NX*NY*NZ) :: dendata, vrdata, vazdata, vcoldata, endata
    real*8 :: rmin,rmax,azmin,azmax,colmin,colmax
-   character(100) :: filename
+   character(30) :: filename
    !Local variables
    integer :: i,j,k
    real*8 :: r, dr, az, dtaz, col, dcol
