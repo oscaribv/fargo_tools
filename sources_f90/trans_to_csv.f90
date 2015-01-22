@@ -155,15 +155,15 @@ program TRANS_TO_CSV
      call create_csv_files(iter,filename_csv)
      table='csv_files/'//trim(filename_csv)
    
-!-------------------------------------------------------------------------------
-! Modify this to be used in all the coordinates systems
-!-------------------------------------------------------------------------------
+     if ( ptype == 'c' ) then !cylindrical
+       call cyl2carte(NX,NY,NZ,dendata,vrdata,vtdata,vzdata,endata,ymin,ymax,xmin,xmax,zmin,zmax,table )
+     else if ( ptype == 's' ) then !spherical
+       call sph2carte(NX,NY,NZ,dendata,vrdata,vtdata,vzdata,endata,ymin,ymax,xmin,xmax,zmin,zmax,table )
+     else
+       print*,'ERROR! your ptype is not allowed'
+       stop
+     end if
 
-
-     !The type of plot is given in the input file
-     !The index also is given in the input file
-     !call cyl2carte(NX,NY,NZ,dendata,vrdata,vtdata,vzdata,endata,ymin,ymax,xmin,xmax,zmin,zmax,table )
-     call sph2carte(NX,NY,NZ,dendata,vrdata,vtdata,vzdata,endata,ymin,ymax,xmin,xmax,zmin,zmax,table )
 
 !-------------------------------------------------------------------------------
 
