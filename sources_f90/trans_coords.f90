@@ -14,14 +14,15 @@ subroutine cyl2carte(NX,NY,NZ,dendata,vrdata,vtdata,vzdata,endata,rmin,rmax,thmi
    integer :: NX, NY, NZ
    real*8, dimension(NX*NY*NZ) :: dendata, vrdata, vtdata, vzdata, endata
    real*8 :: rmin,rmax,thmin,thmax,zmin,zmax
-   character(100) :: filename
+   character(30) :: filename
    !Local variables
    integer :: i,j,k
    real*8 :: r, dr, th, dth, z, dz
    real*8 :: den, vr, vt, vz, en
+   real*8 :: vx, vy !Cartesian velocity components
 
    !Open the file
-   open(unit=101, file=filename, status="unknown")
+   open(unit=101, file=trim(filename), status="unknown")
 
    !Calculates the size of the jumps
    dth = (thmax - thmin) / real(NX-1) !It must be periodic!
@@ -33,8 +34,7 @@ subroutine cyl2carte(NX,NY,NZ,dendata,vrdata,vtdata,vzdata,endata,rmin,rmax,thmi
    th = thmin
    z = zmin
 
-
-   write(101,*),'X, Y, Z, log(den), vr, vtheta, vz, log(energy)'
+   write(101,*),'X, Y, Z, log(den), vx, vy, vz, log(energy)'
    !Let's fill the file
    do k=1,NZ
      do j=1,NY
@@ -44,8 +44,14 @@ subroutine cyl2carte(NX,NY,NZ,dendata,vrdata,vtdata,vzdata,endata,rmin,rmax,thmi
           vt = vtdata(i+(j-1)*NX+(k-1)*NX*NY)
           vz = vzdata(i+(j-1)*NX+(k-1)*NX*NY)
           en = log10(endata(i+(j-1)*NX+(k-1)*NX*NY))
+
+          !transforming the velocity components
+          vx = vr * cos(th) - vt * r * sin(th)
+          vy = vr * sin(th) + vt * r * cos(th)
+          !vz = vz
+    
           
-          write(101,*) r*cos(th),',', r*sin(th),',', z,',', den,',', vr,',', vt,',', vz,',', en
+          write(101,*) r*cos(th),',', r*sin(th),',', z,',', den,',', vx,',', vy,',', vz,',', en
           th = th + dth
         end do
         th = thmin
