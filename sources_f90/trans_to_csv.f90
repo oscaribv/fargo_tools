@@ -20,7 +20,11 @@ program TRANS_TO_CSV
   !Local Variables
   integer :: i,j,k
   !prepare a vector to allocate the memory
-  real*8, allocatable  :: dendata(:), vrdata(:), vtdata(:), vzdata(:), endata(:)
+  !In FARGO3D !
+  !X ALWAYS is azimuth
+  !Y corresponds to the radial component (in cylindrical or spherical)
+  !Z to z in cylindrical and colatitude in spherical
+  real*8, allocatable  :: dendata(:), vxdata(:), vydata(:), vzdata(:), endata(:)
   character(len=30) :: gasfield
   character(len=30) :: filenamebinary
   character(len=30) :: filename_csv, mydirsetup
@@ -84,8 +88,8 @@ program TRANS_TO_CSV
 
   !Let's allocate the memory for read the binary data
   allocate( dendata(NX*NY*NZ) )
-  allocate( vrdata(NX*NY*NZ)  )
-  allocate( vtdata(NX*NY*NZ)  )
+  allocate( vxdata(NX*NY*NZ)  )
+  allocate( vydata(NX*NY*NZ)  )
   allocate( vzdata(NX*NY*NZ)  )
   allocate( endata(NX*NY*NZ)  )
 
@@ -119,7 +123,7 @@ program TRANS_TO_CSV
      !Opening density binary file
      open(unit=100, status="old", file=filenamebinary, form="unformatted", access="direct", recl = NX*NY*NZ*8) 
         !Reading density file
-        read(100,rec=1) vrdata
+        read(100,rec=1) vxdata
      close(100)
 
      !create vy data
@@ -128,7 +132,7 @@ program TRANS_TO_CSV
      !Opening density binary file
      open(unit=100, status="old", file=filenamebinary, form="unformatted", access="direct", recl = NX*NY*NZ*8) 
         !Reading density file
-        read(100,rec=1) vtdata
+        read(100,rec=1) vydata
      close(100)
 
      !create vz data
@@ -156,9 +160,9 @@ program TRANS_TO_CSV
      table='csv_files/'//trim(filename_csv)
    
      if ( ptype == 'c' ) then !cylindrical
-       call cyl2carte(NX,NY,NZ,dendata,vrdata,vtdata,vzdata,endata,ymin,ymax,xmin,xmax,zmin,zmax,table )
+       call cyl2carte(NX,NY,NZ,dendata,vydata,vxdata,vzdata,endata,ymin,ymax,xmin,xmax,zmin,zmax,table )
      else if ( ptype == 's' ) then !spherical
-       call sph2carte(NX,NY,NZ,dendata,vrdata,vtdata,vzdata,endata,ymin,ymax,xmin,xmax,zmin,zmax,table )
+       call sph2carte(NX,NY,NZ,dendata,vydata,vxdata,vzdata,endata,ymin,ymax,xmin,xmax,zmin,zmax,table )
      else
        print*,'ERROR! your ptype is not allowed'
        stop
@@ -174,8 +178,8 @@ program TRANS_TO_CSV
 
   !deallocate the memory
   deallocate(dendata)
-  deallocate(vrdata)
-  deallocate(vtdata)
+  deallocate(vxdata)
+  deallocate(vydata)
   deallocate(vzdata)
   deallocate(endata)
 
