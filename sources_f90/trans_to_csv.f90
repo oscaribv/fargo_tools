@@ -1,9 +1,11 @@
-! ----------------------------------------------------------------
-!   This program reads the binary files of fargo3d and convert  
-!    them to csv files with all the fields in, the file can be
-!           read with Paraview, and others similars.
-!             Created by Barragán O.  Nov-Dec-2014                          
-! ----------------------------------------------------------------
+!--------------------------------------------------------------------------------------------
+!                This program reads the binary files of fargo3d and convert  
+!                them to csv files with all the fields in, the file can be
+!                        read with Paraview, and similar sofrware.
+!                          Created by O. Barragán  Nov-Dec-2014                          
+!--------------------------------------------------------------------------------------------
+!                        Now it can be run in parallel using OPENMP
+!--------------------------------------------------------------------------------------------
 
 program TRANS_TO_CSV
 
@@ -11,16 +13,15 @@ program TRANS_TO_CSV
   !INCLUDE THE MPI LIBRARY
   include "mpif.h"
 
+!START VARIABLE DECLARATION
   !MPI Variables
   integer :: ierr, rank, nprocs
   integer status(MPI_STATUS_SIZE)
   !Tags for the communicators
   integer :: tlims, tptype, tind, tnxyz, titertot
-
   !Local Variables
   integer :: i,j,k
-  !prepare a vector to allocate the memory
-  !In FARGO3D !
+  !prepare a vector to allocate the memory fields of FARGO3D
   !X ALWAYS is azimuth
   !Y corresponds to the radial component (in cylindrical or spherical)
   !Z to z in cylindrical and colatitude in spherical
@@ -120,36 +121,36 @@ program TRANS_TO_CSV
      !create vx data
      gasfield = 'gasvx'
      call createfieldbinaryfilename(iter,gasfield,filenamebinary)
-     !Opening density binary file
+     !Opening vx binary file
      open(unit=100, status="old", file=filenamebinary, form="unformatted", access="direct", recl = NX*NY*NZ*8) 
-        !Reading density file
+        !Reading vx file
         read(100,rec=1) vxdata
      close(100)
 
      !create vy data
      gasfield = 'gasvy'
      call createfieldbinaryfilename(iter,gasfield,filenamebinary)
-     !Opening density binary file
+     !Opening vy binary file
      open(unit=100, status="old", file=filenamebinary, form="unformatted", access="direct", recl = NX*NY*NZ*8) 
-        !Reading density file
+        !Reading vy file
         read(100,rec=1) vydata
      close(100)
 
      !create vz data
      gasfield = 'gasvz'
      call createfieldbinaryfilename(iter,gasfield,filenamebinary)
-     !Opening density binary file
+     !Opening vz binary file
      open(unit=100, status="old", file=filenamebinary, form="unformatted", access="direct", recl = NX*NY*NZ*8) 
-        !Reading density file
+        !Reading vz file
         read(100,rec=1) vzdata
      close(100)
 
      !create energy data
      gasfield = 'gasenergy'
      call createfieldbinaryfilename(iter,gasfield,filenamebinary)
-     !Opening density binary file
+     !Opening energy binary file
      open(unit=100, status="old", file=filenamebinary, form="unformatted", access="direct", recl = NX*NY*NZ*8) 
-        !Reading density file
+        !Reading energy file
         read(100,rec=1) endata
      close(100)
 
@@ -167,9 +168,6 @@ program TRANS_TO_CSV
        print*,'ERROR! your ptype is not allowed'
        stop
      end if
-
-
-!-------------------------------------------------------------------------------
 
      !Make a jump as big as the number of processors
      iter = iter + nprocs
