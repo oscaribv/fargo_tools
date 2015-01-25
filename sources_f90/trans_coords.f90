@@ -1,14 +1,23 @@
-!This subroutine transforms cylindrical to cartesian coordinates.
-!All the data cube!!!!
-!The input parameters are
-!       NX -> Dimenssion in \theta
-!       NY -> Dimenssion in R
-!       NZ -> Dimenssion in Z
-!       data(NX*NY*NZ) containing the values
-!       minimum and maximum values for r, theta and z
-!       the name of the output file
+!----------------------------------------------------------------------------------------------------------
+!                                               cyl2carte
+!                                        Written by O. Barragán
+!----------------------------------------------------------------------------------------------------------
+!This subroutine transform cylindrical coordinates to cartesian ones
+!The input vaules are:
+!  NX, NY, NZ                                   -> Number of points in azimuth, radius and z
+!  dendata, vrdata, vtdata, vzdata, endata      -> The field arrays, each one of these has a size NX*NY*NZ
+!  rmin,rmax,thmin,thmax,zmin,zmax              -> the physical sizes of the "cylindrical box"
+!  filename                                     -> name of the output file (csv format)
+!----------------------------------------------------------------------------------------------------------
+! The output file is a csv file with the columns 
+!        X, Y, Z, log(den), vx, vy, vz, log(energy)
+! These files can be open with 3D-visulization programs, such as Paraview
+!----------------------------------------------------------------------------------------------------------
+
+!Define the subroutine name cyl2carte
 subroutine cyl2carte(NX,NY,NZ,dendata,vrdata,vtdata,vzdata,endata,rmin,rmax,thmin,thmax,zmin,zmax,filename)
 
+!START VARIABLE DEFINITIONS
  implicit none
    !Input variables
    integer :: NX, NY, NZ
@@ -19,9 +28,10 @@ subroutine cyl2carte(NX,NY,NZ,dendata,vrdata,vtdata,vzdata,endata,rmin,rmax,thmi
    integer :: i,j,k
    real*8 :: r, dr, th, dth, z, dz
    real*8 :: den, vr, vt, vz, en
-   real*8 :: vx, vy !Cartesian velocity components
+   real*8 :: vx, vy 
+!END VARIABLE DEFINITIONS
 
-   !Open the file
+   !Open the file, this will be the output file
    open(unit=101, file=trim(filename), status="unknown")
 
    !Calculates the size of the jumps
@@ -34,49 +44,76 @@ subroutine cyl2carte(NX,NY,NZ,dendata,vrdata,vtdata,vzdata,endata,rmin,rmax,thmi
    th = thmin
    z = zmin
 
+   !This line writes the head of the csv file
    write(101,*),'X, Y, Z, log(den), vx, vy, vz, log(energy)'
+
    !Let's fill the file
    do k=1,NZ
      do j=1,NY
         do i=1,NX
+
+          !Whose are the values of the fields in this point i,j,k?
+          !density and energy are transformed to log10
           den = log10(dendata(i+(j-1)*NX+(k-1)*NX*NY))
           vr = vrdata(i+(j-1)*NX+(k-1)*NX*NY)
           vt = vtdata(i+(j-1)*NX+(k-1)*NX*NY)
           vz = vzdata(i+(j-1)*NX+(k-1)*NX*NY)
           en = log10(endata(i+(j-1)*NX+(k-1)*NX*NY))
 
-          !transforming the velocity components
+          !transforming the velocity components, these have to be transformed as
+          !vectors components, more details in O. Barragán, 2015, Master thesis
           vx = vr * cos(th) - vt * r * sin(th)
           vy = vr * sin(th) + vt * r * cos(th)
           !vz = vz
-    
-          
+
+          !Now I know the values of the coordinates in cartesian coordinates,
+          !and also the vector components, lets write it in the output file
+          !before I forger it          
           write(101,*) r*cos(th),',', r*sin(th),',', z,',', den,',', vx,',', vy,',', vz,',', en
+
+          !Jump in azimuth
           th = th + dth
+
         end do
+        !Restart azimuth
         th = thmin
+        !Jump in r
         r = r + dr
      end do
+     !Restart r
      r = rmin
+     !Jump in z
      z = z + dz
    end do
+
+   !Now the output file is filled with all the values
 
   !Close the file
   close(101)
 
 end subroutine cyl2carte
+!End of the subroutine cyl2carte
 
-!This subroutine transforms spherical to cartesian coordinates.
-!All the data cube!!!!
-!The input parameters are
-!       NX -> Dimenssion in azimuth
-!       NY -> Dimenssion in radius
-!       NZ -> Dimenssion in colatitude
-!       data(NX*NY*NZ) containing the values
-!       minimum and maximum values for r, azimuth and colatitude
-!       the name of the output file
+!----------------------------------------------------------------------------------------------------------
+!                                            sph2carte
+!                                       Written by O. Barragán
+!----------------------------------------------------------------------------------------------------------
+!This subroutine transform spherical coordinates to cartesian ones
+!The input vaules are:
+!  NX, NY, NZ                                   -> Number of points in azimuth, radius and colatitude
+!  dendata, vrdata, vazdata, vcoldata, endata      -> The field arrays, each one of these has a size NX*NY*NZ
+!  rmin,rmax,thmin,thmax,zmin,zmax              -> the physical sizes of the "spherical box"
+!  filename                                     -> name of the output file (csv format)
+!----------------------------------------------------------------------------------------------------------
+! The output file is a csv file with the columns 
+!        X, Y, Z, log(den), vx, vy, vz, log(energy)
+! These files can be open with 3D-visulization programs, such as Paraview
+!----------------------------------------------------------------------------------------------------------
+
+!Define the subroutine name sph2carte
 subroutine sph2carte(NX,NY,NZ,dendata,vrdata,vazdata,vcoldata,endata,rmin,rmax,azmin,azmax,colmin,colmax,filename)
 
+!START VARIABLE DEFINITIONS
  implicit none
    !Input variables
    integer :: NX, NY, NZ
@@ -92,8 +129,10 @@ subroutine sph2carte(NX,NY,NZ,dendata,vrdata,vazdata,vcoldata,endata,rmin,rmax,a
    real*8 :: dxdr, dxdaz, dxdcol
    real*8 :: dydr, dydaz, dydcol
    real*8 :: dzdr, dzdaz, dzdcol
+!END VARIABLE DEFINITIONS
 
-   !Open the file
+   !Open the file, this will be the output file
+   open(unit=101, file=trim(filename), status="unknown")
    open(unit=101, file=trim(filename), status="unknown")
 
    !Calculates the size of the jumps
@@ -106,11 +145,15 @@ subroutine sph2carte(NX,NY,NZ,dendata,vrdata,vazdata,vcoldata,endata,rmin,rmax,a
    az = azmin
    col = colmin
 
+   !This line writes the head of the csv file
    write(101,*),'X, Y, Z, log(den), vx, vy, vz, log(energy)'
    !Let's fill the file
    do k=1,NZ
      do j=1,NY
         do i=1,NX
+
+          !Whose are the values of the fields in this point i,j,k?
+          !density and energy are transformed to log10
           den = log10(dendata(i+(j-1)*NX+(k-1)*NX*NY))
           vr = vrdata(i+(j-1)*NX+(k-1)*NX*NY)
           vaz = vazdata(i+(j-1)*NX+(k-1)*NX*NY)
@@ -123,17 +166,20 @@ subroutine sph2carte(NX,NY,NZ,dendata,vrdata,vazdata,vcoldata,endata,rmin,rmax,a
           x = x * cos(az)
           z = r * cos(col)
 
-          !lets transform the velocities to carseian veolicities to be used in
-          !paravew easily and to plot velocity maps
-          !creating transformation coefficients
+          !transforming the velocity components, these have to be transformed as
+          !vectors components, more details in O. Barragán, 2015, Master thesis
+
+          !dx derivatives
           dxdr = sin(col) * cos(az)
           dxdaz =  - r * sin(col) * sin(az)
           dxdcol = r * cos (col) * cos(az)
 
+          !dy derivatives
           dydr = sin(col) * sin(az)
           dydaz = r * sin(col) * cos(az)
           dydcol = r * cos(col) * sin(az)
 
+          !dz derivatives
           dzdr = cos(col)
           dzdaz = 0.0
           dzdcol = - r * sin(col)
@@ -142,23 +188,36 @@ subroutine sph2carte(NX,NY,NZ,dendata,vrdata,vazdata,vcoldata,endata,rmin,rmax,a
           vx = dxdr * vr + dxdcol * vcol + dxdaz * vaz         
           vy = dydr * vr + dydcol * vcol + dydaz * vaz         
           vz = dzdr * vr + dzdcol * vcol + dzdaz * vaz         
-          !DONE!
 
-          !write(101,*) x,',', y,',', z,',', den,',', vr,',', vaz,',', vcol,',', en
+          !DONE!
+          !The velocities are transformed now
+
+          !Now I know the values of the coordinates in cartesian coordinates,
+          !and also the vector components, lets write it in the output file
+          !before I forger it          
           write(101,*) x,',', y,',', z,',', den,',', vx,',', vy,',', vz,',', en
+          
+          !Jump is azimuth
           az = az + dtaz
+
         end do
+        !Restart azimuth
         az = azmin
+        !Jump in r
         r = r + dr
      end do
+     !Restart r
      r = rmin
+     !Jump in colatitude
      col = col + dcol
    end do
 
+  !Now the output file is filled with all the values
   !Close the file
   close(101)
 
 end subroutine sph2carte
+!End of subroutine sph2carte
 
 
 !This subroutine transforms cylindrical to cartesian coordinates in a sheet of
