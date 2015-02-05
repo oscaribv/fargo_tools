@@ -164,6 +164,8 @@ program TRANS_TO_CSV
        call cyl2carte(NX,NY,NZ,dendata,vydata,vxdata,vzdata,endata,ymin,ymax,xmin,xmax,zmin,zmax,table )
      else if ( ptype == 's' ) then !spherical
        call sph2carte(NX,NY,NZ,dendata,vydata,vxdata,vzdata,endata,ymin,ymax,xmin,xmax,zmin,zmax,table )
+     else if ( ptype == 'r' ) then !cartesian
+       call carte2carte(NX,NY,NZ,dendata,vydata,vxdata,vzdata,endata,ymin,ymax,xmin,xmax,zmin,zmax,table )
      else
        print*,'ERROR! your ptype is not allowed'
        stop

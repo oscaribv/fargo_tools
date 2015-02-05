@@ -1,4 +1,98 @@
 !----------------------------------------------------------------------------------------------------------
+!                                               carte2carte
+!                                        Written by O. Barragán
+!----------------------------------------------------------------------------------------------------------
+!This subroutine writes a file in cartesian coordiantes into a csv file 
+!The input vaules are:
+!  NX, NY, NZ                                   -> Number of points in x, y and z
+!  dendata, vxdata, vydata, vzdata, endata      -> The field arrays, each one of these has a size NX*NY*NZ
+!  xmin,xmax,ymin,ymax,zmin,zmax              -> the physical sizes of the "box"
+!  filename                                     -> name of the output file (csv format)
+!----------------------------------------------------------------------------------------------------------
+! The output file is a csv file with the columns 
+!        X, Y, Z, log(den), vx, vy, vz, log(energy)
+! These files can be open with 3D-visulization programs, such as Paraview
+!----------------------------------------------------------------------------------------------------------
+
+!Define the subroutine name carte2carte
+subroutine carte2carte(NX,NY,NZ,dendata,vydata,vxdata,vzdata,endata,ymin,ymax,xmin,xmax,zmin,zmax,filename)
+
+!START VARIABLE DEFINITIONS
+ implicit none
+   !Input variables
+   integer :: NX, NY, NZ
+   real*8, dimension(NX*NY*NZ) :: dendata, vxdata, vydata, vzdata, endata
+   real*8 :: xmin,xmax,ymin,ymax,zmin,zmax
+   character(30) :: filename
+   !Local variables
+   integer :: i,j,k
+   real*8 :: x, dx, y, dy, z, dz
+   real*8 :: den, en
+   real*8 :: vx, vy, vz
+!END VARIABLE DEFINITIONS
+
+   !Open the file, this will be the output file
+   open(unit=101, file=trim(filename), status="unknown")
+
+   !Calculates the size of the jumps
+   dx = (xmax - xmin) / real(NX)
+   dy = (ymax - ymin) / real(NY) 
+   dz = (zmax - zmin) / real(NZ)
+
+   !Where do we start to jump?
+   x = xmin
+   y = ymin
+   z = zmin
+
+   !This line writes the head of the csv file
+   write(101,*),'X, Y, Z, log(den), vx, vy, vz, log(energy)'
+
+   !Let's fill the file
+   do k=1,NZ
+     do j=1,NY
+        do i=1,NX
+
+          !Whose are the values of the fields in this point i,j,k?
+          !density and energy are transformed to log10
+          den = log10(dendata(i+(j-1)*NX+(k-1)*NX*NY))
+          vx = vxdata(i+(j-1)*NX+(k-1)*NX*NY)
+          vy = vydata(i+(j-1)*NX+(k-1)*NX*NY)
+          vz = vzdata(i+(j-1)*NX+(k-1)*NX*NY)
+          en = log10(endata(i+(j-1)*NX+(k-1)*NX*NY))
+
+          !There are no transformation
+
+          !Now I know the values of the coordinates in cartesian coordinates,
+          !and also the vector components, lets write it in the output file
+          !before I forger it          
+          write(101,*) x,',',  y,',', z,',', den,',', vx,',', vy,',', vz,',', en
+
+          !Jump in x
+          x = x + dx
+
+        end do
+        !Restart x
+        x = xmin
+        !Jump in y
+        y = y + dy
+     end do
+     !Restart r
+     y = ymin
+     !Jump in z
+     z = z + dz
+   end do
+
+   !Now the output file is filled with all the values
+
+  !Close the file
+  close(101)
+
+end subroutine carte2carte
+!End of the subroutine carte2carte
+
+
+
+!----------------------------------------------------------------------------------------------------------
 !                                               cyl2carte
 !                                        Written by O. Barragán
 !----------------------------------------------------------------------------------------------------------
