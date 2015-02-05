@@ -1,1 +1,44 @@
-This set of tools allows to work with FARGO3D outputs
+#----------------------------------------------------------#
+#	 		fargo_tools                        #
+#     Written by O. Barragán, F. Rendón & R. Álvarez       #
+#----------------------------------------------------------#
+
+This set of tools allow to work with FARGO3D outputs.
+
+#---------------------------------------------------------
+#			sources_f90
+#---------------------------------------------------------
+
+All f90 files are inside this directory. A brief description
+is done in the next lines.
+
+#avden.f90
+
+
+#circumplanetary.f90
+
+
+#create_names.f90
+
+
+#input_file.f90
+
+
+#readbinaryall.f90
+
+
+#reader.f90
+
+
+#trans_coords.f90
+Inside this file there are all the subroutines that transform
+the fargo output files into csv files.
+These subroutines are called in main routines such as
+trans_to_csv.f90
+
+#trans_to_csv.f90
+This file takes the fargo output files and transforms them to
+csv files.
+
+
+
