@@ -18,7 +18,7 @@ program TRANS_TO_CSV
   integer :: ierr, rank, nprocs
   integer status(MPI_STATUS_SIZE)
   !Tags for the communicators
-  integer :: tlims, tptype, tind, tnxyz, titertot
+  integer :: tlims, tptype, tind, tnxyz, titermin, titertot, titerjump
   !Local Variables
   integer :: i,j,k
   !prepare a vector to allocate the memory fields of FARGO3D
@@ -29,7 +29,7 @@ program TRANS_TO_CSV
   character(len=30) :: gasfield
   character(len=30) :: filenamebinary
   character(len=30) :: filename_csv, mydirsetup
-  integer :: itertot
+  integer :: itermin, itertot, iterjump
   real*8 :: xmin, xmax, ymin, ymax, zmin, zmax
   real*8 :: limits(6) ! xmin, xmax, ymin, ymax, zmin, zmax
   character(30) :: table
@@ -62,6 +62,8 @@ program TRANS_TO_CSV
     tind      = 3
     tnxyz     = 4
     titertot  = 5
+    titermin  = 6
+    titerjump = 7
 
     if ( rank > 0 ) then
       call MPI_RECV(limits,6,MPI_REAL8,0,tlims,MPI_COMM_WORLD,status,ierr) 
@@ -69,6 +71,8 @@ program TRANS_TO_CSV
       call MPI_RECV(ind,1,MPI_INTEGER,0,tind,MPI_COMM_WORLD,status,ierr) 
       call MPI_RECV(NXYZ,3,MPI_INTEGER,0,tnxyz,MPI_COMM_WORLD,status,ierr) 
       call MPI_RECV(itertot,1,MPI_INTEGER,0,titertot,MPI_COMM_WORLD,status,ierr) 
+      call MPI_RECV(itermin,1,MPI_INTEGER,0,titermin,MPI_COMM_WORLD,status,ierr) 
+      call MPI_RECV(iterjump,1,MPI_INTEGER,0,titerjump,MPI_COMM_WORLD,status,ierr) 
     else if ( rank == 0 ) then
       do i = 1, nprocs - 1 
         call MPI_SEND(limits,6,MPI_REAL8,i,tlims,MPI_COMM_WORLD,status,ierr) 
@@ -76,6 +80,8 @@ program TRANS_TO_CSV
         call MPI_SEND(ind,1,MPI_INTEGER,i,tind,MPI_COMM_WORLD,status,ierr) 
         call MPI_SEND(NXYZ,3,MPI_INTEGER,i,tnxyz,MPI_COMM_WORLD,status,ierr) 
         call MPI_SEND(itertot,1,MPI_INTEGER,i,titertot,MPI_COMM_WORLD,status,ierr) 
+        call MPI_SEND(itermin,1,MPI_INTEGER,i,titermin,MPI_COMM_WORLD,status,ierr) 
+        call MPI_SEND(iterjump,1,MPI_INTEGER,i,titerjump,MPI_COMM_WORLD,status,ierr) 
       end do
     end if
 
