@@ -7,7 +7,7 @@
 !zmin,
 !zmax
 
-subroutine read_input(NXYZ,itertot,limits,ptype,ind,mydirsetup)
+subroutine read_input(NXYZ,itermin,itertot,iterjump,limits,ptype,ind,mydirsetup)
 
  implicit none
 
@@ -15,7 +15,7 @@ subroutine read_input(NXYZ,itertot,limits,ptype,ind,mydirsetup)
  real*8 :: limits(6) 
  character(1) :: ptype
  character(99) :: mydirsetup
- integer :: ind, NXYZ(3), itertot
+ integer :: ind, NXYZ(3), itermin, itertot, iterjump
 
  !the input file must be called input.dat
  open(13,file='input.dat',status='old')
@@ -23,7 +23,9 @@ subroutine read_input(NXYZ,itertot,limits,ptype,ind,mydirsetup)
    read(13,*),NXYZ(1)
    read(13,*),NXYZ(2)
    read(13,*),NXYZ(3)
+   read(13,*),itermin
    read(13,*),itertot
+   read(13,*),iterjump
    read(13,*),limits(1)
    read(13,*),limits(2)
    read(13,*),limits(3)

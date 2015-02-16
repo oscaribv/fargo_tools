@@ -50,7 +50,7 @@ program TRANS_TO_CSV
     call system('mkdir csv_files')
 
     !Read the data form the input.dat file
-    call read_input(NXYZ,itertot,limits,ptype,ind,mydirsetup)
+    call read_input(NXYZ,itermin,itertot,iterjump,limits,ptype,ind,mydirsetup)
 
   end if
 
