@@ -41,7 +41,7 @@ program TRANS_TO_CSV
 
   !Obtain the number of processors and the actual rank
   call MPI_COMM_SIZE(MPI_COMM_WORLD, nprocs, ierr)
-  call MPI_COMM_RANK(MPI_COMM_WORLD, rank, ierr)
+  call MPI_COMM_RANK(iterjump * MPI_COMM_WORLD, rank, ierr)
 
   !Let the first processor do all this work
   if ( rank == 0 ) then
@@ -109,7 +109,7 @@ program TRANS_TO_CSV
   zmax = limits(6)
 
   !Let's divide all the work between all the processors
-  iter = rank + 1
+  iter = itermin + iterjump * rank 
   !Start the work now!
   do while ( iter <= itertot )  
 
@@ -178,7 +178,7 @@ program TRANS_TO_CSV
      end if
 
      !Make a jump as big as the number of processors
-     iter = iter + nprocs
+     iter = iter + iterjump * nprocs
 
   enddo
 
