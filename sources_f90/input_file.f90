@@ -7,7 +7,7 @@
 !zmin,
 !zmax
 
-subroutine read_input(NXYZ,itermin,itertot,iterjump,limits,ptype,ind,mydirsetup)
+subroutine read_input(NXYZ,itermin,itertot,iterjump,limits,ptype)
 
  implicit none
 
@@ -33,8 +33,6 @@ subroutine read_input(NXYZ,itermin,itertot,iterjump,limits,ptype,ind,mydirsetup)
    read(13,*),limits(5)
    read(13,*),limits(6)
    read(13,*),ptype
-   read(13,*),ind
-   read(13,*),mydirsetup
  close(13) 
 
 end subroutine read_input
