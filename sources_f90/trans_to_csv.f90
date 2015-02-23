@@ -186,6 +186,8 @@ program TRANS_TO_CSV
   deallocate(vzdata)
   deallocate(endata)
 
+  print*,'The csv files have been created inside csv_files directory'
+
   !Wait until all the processors finish
   call MPI_BARRIER(MPI_COMM_WORLD,ierr) 
 
