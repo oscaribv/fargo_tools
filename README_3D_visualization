@@ -6,9 +6,7 @@
 #################################################################
 
 This small tutorial explains how to visualize 3D disks using
-paraview using the csv files created by trans_to_csv program,
-but in general it can be used in all visualization program 
-that admit csv files.
+paraview using the csv files created by trans_to_csv program.
 
 #Installing paraview
 
@@ -23,10 +21,9 @@ This must be enough to install paraview in your computer.
 #Compiling trans_to_csv
 
 Inside fargo_tools a directory called trans_to_csv exists. 
-There are a Makefile, an input.dat sample and maybe 
-some *.o files inside  this directory.
-To compile it, you need to have installed the FORTRAN90 and OPENMP 
-libraries, if your computer have this packages the compilation must work.
+There are a Makefile, and maybe some *.o files inside  this directory.
+To compile it, you need to have installed the FORTRAN90 and OPENMP libraries, 
+if your computer have this packages the compilation must work.
 
 it must compiles when you type 
 	$ make
@@ -52,19 +49,36 @@ input.dat file, there is an example of a input.dat file
 1.72	#Max value in Z direction 
 s	#s for spherical, c for cylindrical, r for cartesian
 
+this file is called input.dat.sample inside fargo_tools.
+
 #Getting csv files
 
-Once you have compiled trans_to_csv and filled input.dat file
+Once you have compiled trans_to_csv and filled the input.dat file
 you are ready to get csv files.
 copy both trans_to_csv and input.dat files into the directory
-where the ouptput files are. This place must be inside 
+where the ouptput files are. This place must be inside the fargo3d directory
 	~/outputs/SETUP_OUTPUT
-then you have to run the file inside this directory. It allows
-parallel running, so you have to running it 
+then you have to run the file inside this directory.
+It allows parallel running, so you have to running it 
 	mpirun -np N ./trans_to_csv
 being N the number of processors you want use.
+If the program is running correctly must print some like
 
+  Creating disk1.csv file by processor 1
+  Creating disk2.csv file by processor 2
+  Creating disk3.csv file by processor 1
+  Creating disk4.csv file by processor 2
+			.
+			.
+			.
+			.
 
+When the program finishes prints 
 
+  The csv files have been created inside csv_files directory
+
+This mean that the program ended correctly.
+
+#Visualizing the csv files with paraview
 
 
