@@ -1,6 +1,9 @@
-############################################################
-# A small tutorial to visualize 3D disk with paraview
-############################################################
+#################################################################		
+#   A small tutorial to visualize 3D disk with paraview    	#
+#     Written by Barragán O., Rendón F. & Álvarez R.	   	#
+#     			December 2014				#	
+#     		    Updated -> Febreary 2015			#
+#################################################################
 
 This small tutorial explains how to visualize 3D disks using
 paraview using the csv files created by trans_to_csv program,
@@ -12,29 +15,35 @@ that admit csv files.
 The paraview binary files can be downloaded from http://www.paraview.org/.
 Some linux distributions, as fedora, admit to download it from its repositories.
 
-installing paraview in fedora
-	yum install praview
+installing paraview in fedora, type in your terminal
+	$ sudo yum install paraview
+
+This must be enough to install paraview in your computer.
 
 #Compiling trans_to_csv
 
 Inside fargo_tools a directory called trans_to_csv exists. 
 There are a Makefile, an input.dat sample and maybe 
 some *.o files inside  this directory.
-To compile you need to have installed the fortran and OPENMP 
-libraries, if your computer have this packages, 
+To compile it, you need to have installed the FORTRAN90 and OPENMP 
+libraries, if your computer have this packages the compilation must work.
+
 it must compiles when you type 
-		make
-inside trans_to_csv directory
+	$ make
+
+inside trans_to_csv directory, this generates an excutable file called trans_to_csv.
 
 #input.dat file
 
-Before running trans_to_csv you need to feel correctly the 
-input.dat file, next there is an example of a input.dat file
+Before running trans_to_csv you need to fill correctly a
+input.dat file, there is an example of a input.dat file
 
 128	#Number of cells in the X direction
 128	#Number of cells in the Y direction
 128	#Number of cells in the Z direction
-1	#Number of output files
+0	#minimum output file to be transformed
+1	#maximum output file to be transformed
+1	#size of the jump between output files to be transformed
 -3.1416	#Min value in X direction 
 3.1416	#Max value in X direction 
 0.4	#Min value in Y direction 
@@ -42,7 +51,6 @@ input.dat file, next there is an example of a input.dat file
 1.42	#Min value in Z direction 
 1.72	#Max value in Z direction 
 s	#s for spherical, c for cylindrical, r for cartesian
-my_dir	#This is not used by the code 
 
 #Getting csv files
 
