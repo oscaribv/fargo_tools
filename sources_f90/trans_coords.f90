@@ -45,7 +45,7 @@ subroutine carte2carte(NX,NY,NZ,dendata,vydata,vxdata,vzdata,endata,ymin,ymax,xm
    z = zmin
 
    !This line writes the head of the csv file
-   write(101,*),'X, Y, Z, log(den), vx, vy, vz, log(energy)'
+   write(101,*),'X, Y, Z, lden, vx, vy, vz, lenergy'
 
    !Let's fill the file
    do k=1,NZ
@@ -139,7 +139,7 @@ subroutine cyl2carte(NX,NY,NZ,dendata,vrdata,vtdata,vzdata,endata,rmin,rmax,thmi
    z = zmin
 
    !This line writes the head of the csv file
-   write(101,*),'X, Y, Z, log(den), vx, vy, vz, log(energy)'
+   write(101,*),'X, Y, Z, lden, vx, vy, vz, lenergy'
 
    !Let's fill the file
    do k=1,NZ
@@ -240,7 +240,7 @@ subroutine sph2carte(NX,NY,NZ,dendata,vrdata,vazdata,vcoldata,endata,rmin,rmax,a
    col = colmin
 
    !This line writes the head of the csv file
-   write(101,*),'X, Y, Z, log(den), vx, vy, vz, log(energy)'
+   write(101,*),'X, Y, Z, lden, vx, vy, vz, lenergy'
    !Let's fill the file
    do k=1,NZ
      do j=1,NY
