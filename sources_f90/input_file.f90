@@ -53,7 +53,7 @@ end subroutine read_input
 !NZmin,
 !NZmax,
 
-subroutine read_input_circumplanetary(NXYZ,itertot,limits,ENES)
+subroutine read_input_cpd(NXYZ,itertot,limits,ENES)
 
  implicit none
 
@@ -61,15 +61,18 @@ subroutine read_input_circumplanetary(NXYZ,itertot,limits,ENES)
  !real limits of X,Y,Z
  real*8 :: limits(6) 
  !idex where the cut must be done
- integer :: ENES(6), NXYZ(3), itertot
+ integer :: ENES(6), NXYZ(3), itermin, itertot, iterjump
+ character(len=1) :: ptype
 
  !the input file must be called input.dat
- open(13,file='input_circumplanetary.dat',status='old')
+ open(13,file='input_cpd.dat',status='old')
  !start to read the parameters
    read(13,*),NXYZ(1)
    read(13,*),NXYZ(2)
    read(13,*),NXYZ(3)
+   read(13,*),itermin
    read(13,*),itertot
+   read(13,*),iterjump
    read(13,*),limits(1)
    read(13,*),limits(2)
    read(13,*),limits(3)
@@ -82,6 +85,7 @@ subroutine read_input_circumplanetary(NXYZ,itertot,limits,ENES)
    read(13,*),ENES(4)
    read(13,*),ENES(5)
    read(13,*),ENES(6)
+   read(13,*),ptype
  close(13) 
 
-end subroutine read_input_circumplanetary
+end subroutine read_input_cpd
