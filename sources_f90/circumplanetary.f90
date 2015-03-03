@@ -32,7 +32,7 @@ program CIRCUMPLANETARY
   integer :: itertot
   real*8 :: limits(6) ! xmin, xmax, ymin, ymax, zmin, zmax
   character(100) :: table
- character(15) :: filecircumplanetary
+  character(30) :: filecircumplanetary, gasfield
   integer :: iter, ind
   character(1) :: ptype
   integer :: ENES(6), NXmin, NXmax, NYmin, NYmax, NZmin, NZmax
@@ -161,62 +161,64 @@ program CIRCUMPLANETARY
 
   do while ( iter <= itertot )  
 
-    print*,'iter = ',iter,' in processor ',rank + 1
+    print*,'Transforming output = ',iter,' in processor ',rank + 1
 
 !----------------------------------------------------------------------
 !       Reading the original binary files
 !----------------------------------------------------------------------
 
-    !creating gasdensxxxx.dat name inside filenamebinary
-    call createdensitybinaryfilename(iter,filenamebinary)
-    !Opening binary file
-    open(unit=100, status="old", file=filenamebinary, form="unformatted", &
-         access="direct", recl = NX*NY*NZ*8)
-    !Reading density file
-    read(100,rec=1) dendata
-    close(100)
-    !binary density file is closed and it is stored in RAM
+     !create denstiy data
+     gasfield = 'gasdens'
+     call createfieldbinaryfilename(iter,gasfield,filenamebinary)
+     !Opening density binary file
+     open(unit=100, status="old", file=filenamebinary, form="unformatted", &
+     access="direct", recl = NX*NY*NZ*8)
+        !Reading density file
+        read(100,rec=1) dendata
+     close(100)
 
-    !creating gasvxxxxx.dat name inside filenamebinary
-    call createvxbinaryfilename(iter,filenamebinary)
-    !Opening binary file
-    open(unit=100, status="old", file=filenamebinary, form="unformatted", &
-         access="direct", recl = NX*NY*NZ*8)
-    !Reading vx file
-    read(100,rec=1) vxdata
-    close(100)
-    !binary vx file is closed and it is stored in RAM
+     !create vx data
+     gasfield = 'gasvx'
+     call createfieldbinaryfilename(iter,gasfield,filenamebinary)
+     !Opening vx binary file
+     open(unit=100, status="old", file=filenamebinary, form="unformatted", &
+access="direct", recl = NX*NY*NZ*8)
+        !Reading vx file
+        read(100,rec=1) vxdata
+     close(100)
 
-    !creating gasvyxxxx.dat name inside filenamebinary
-    call createvybinaryfilename(iter,filenamebinary)
-    !Opening vy binary file
-    open(unit=100, status="old", file=filenamebinary, form="unformatted", &
-         access="direct", recl = NX*NY*NZ*8)
-    !Reading vy file
-    read(100,rec=1) vydata
-    close(100)
-    !binary vy file is closed and it is stored in RAM
 
-    !creating gasvzxxxx.dat name inside filenamebinary
-    call createvzbinaryfilename(iter,filenamebinary)
-    !Opening vz binary file
-    open(unit=100, status="old", file=filenamebinary, form="unformatted", &
-         access="direct", recl = NX*NY*NZ*8)
-    !Reading vz file
-    read(100,rec=1) vzdata
-    close(100)
-    !binary vz file is closed and it is stored in RAM
+     !create vy data
+     gasfield = 'gasvy'
+     call createfieldbinaryfilename(iter,gasfield,filenamebinary)
+     !Opening vy binary file
+     open(unit=100, status="old", file=filenamebinary, form="unformatted", &
+access="direct", recl = NX*NY*NZ*8)
+        !Reading vy file
+        read(100,rec=1) vydata
+     close(100)
 
-    !creating gasenergyxxxx.dat name inside filenamebinary
-    call createenergybinaryfilename(iter,filenamebinary)
-    !Opening energy binary file
-    open(unit=100, status="old", file=filenamebinary, form="unformatted", &
-         access="direct", recl = NX*NY*NZ*8)
-    !Reading energy file
-    read(100,rec=1) endata
-    close(100)
-    !binary energy file is closed and it is stored in RAM
+     !create vz data
+     gasfield = 'gasvz'
+     call createfieldbinaryfilename(iter,gasfield,filenamebinary)
+     !Opening vz binary file
+     open(unit=100, status="old", file=filenamebinary, form="unformatted", &
+access="direct", recl = NX*NY*NZ*8)
+        !Reading vz file
+        read(100,rec=1) vzdata
+     close(100)
 
+     !create energy data
+     gasfield = 'gasenergy'
+     call createfieldbinaryfilename(iter,gasfield,filenamebinary)
+     !Opening energy binary file
+     open(unit=100, status="old", file=filenamebinary, form="unformatted", &
+access="direct", recl = NX*NY*NZ*8)
+        !Reading energy file
+        read(100,rec=1) endata
+     close(100)
+
+     !The binary data has been stored in the arrays
 
 !----------------------------------------------------------------------
 !       Now all the original binary files are stored in RAM
@@ -255,7 +257,10 @@ program CIRCUMPLANETARY
 !       inside circumplanetary_data directory
 !----------------------------------------------------------------------
 
-  call create_circumplanetary_den_binaryfilename(iter,filecircumplanetary)
+!  call create_circumplanetary_den_binaryfilename(iter,filecircumplanetary)
+      !create denstiy data
+  gasfield = 'gasdens'
+  call createfieldbinaryfilename(iter,gasfield,filecircumplanetary)
   table = 'circumplanetary_data/'//trim(filecircumplanetary)
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
@@ -263,7 +268,8 @@ program CIRCUMPLANETARY
   !Now the circumplanetary data is stored in a binary file
   close(23)
 
-  call create_circumplanetary_vx_binaryfilename(iter,filecircumplanetary)
+  gasfield = 'gasvx'
+  call createfieldbinaryfilename(iter,gasfield,filecircumplanetary)
   table = 'circumplanetary_data/'//trim(filecircumplanetary)
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
@@ -271,7 +277,8 @@ program CIRCUMPLANETARY
   !Now the circumplanetary data is stored in a binary file
   close(23)
 
-  call create_circumplanetary_vy_binaryfilename(iter,filecircumplanetary)
+  gasfield = 'gasvy'
+  call createfieldbinaryfilename(iter,gasfield,filecircumplanetary)
   table = 'circumplanetary_data/'//trim(filecircumplanetary)
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
@@ -279,7 +286,8 @@ program CIRCUMPLANETARY
   !Now the circumplanetary data is stored in a binary file
   close(23)
 
-  call create_circumplanetary_vz_binaryfilename(iter,filecircumplanetary)
+  gasfield = 'gasvz'
+  call createfieldbinaryfilename(iter,gasfield,filecircumplanetary)
   table = 'circumplanetary_data/'//trim(filecircumplanetary)
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
@@ -287,7 +295,8 @@ program CIRCUMPLANETARY
   !Now the circumplanetary data is stored in a binary file
   close(23)
 
-  call create_circumplanetary_ene_binaryfilename(iter,filecircumplanetary)
+  gasfield = 'gasenergy'
+  call createfieldbinaryfilename(iter,gasfield,filecircumplanetary)
   table = 'circumplanetary_data/'//trim(filecircumplanetary)
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
