@@ -53,7 +53,7 @@ end subroutine read_input
 !NZmin,
 !NZmax,
 
-subroutine read_input_cpd(NXYZ,itertot,limits,ENES)
+subroutine read_input_cpd(NXYZ,itermin,itertot,iterjump,limits,ENES,ptype)
 
  implicit none
 

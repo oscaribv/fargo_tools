@@ -27,7 +27,7 @@ program CIRCUMPLANETARY
   !c for circumplanetary data bin files
   real*8, allocatable  :: cdendata(:), cvxdata(:), cvydata(:), cvzdata(:), cendata(:)
   !names for the binary files
-  character(len=15) :: filenametxt, filenamebinary
+  character(len=30) :: filenametxt, filenamebinary
   !number of iterations, same as number of set of files in FARGO3D
   integer :: itertot, itermin, iterjump
   real*8 :: limits(6) ! xmin, xmax, ymin, ymax, zmin, zmax
@@ -167,7 +167,7 @@ program CIRCUMPLANETARY
 
 
   !Let's divide all the work between all the processors
-  iter = rank + iterjump * rank
+  iter = itermin + iterjump * rank
   !Start the work now!
   do while ( iter <= itertot )  
 
