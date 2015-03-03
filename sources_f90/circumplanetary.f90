@@ -18,7 +18,7 @@ program CIRCUMPLANETARY
   integer :: ierr, rank, nprocs
   integer status(MPI_STATUS_SIZE)
   !Tags for the communicators
-  integer :: tlims, tenes, tnxyz, titertot
+  integer :: tlims, tenes, tnxyz, titertot, titermin, titerjump, tptype
 
   !Local Variables
   integer :: i,j,k
@@ -29,7 +29,7 @@ program CIRCUMPLANETARY
   !names for the binary files
   character(len=15) :: filenametxt, filenamebinary
   !number of iterations, same as number of set of files in FARGO3D
-  integer :: itertot
+  integer :: itertot, itermin, iterjump
   real*8 :: limits(6) ! xmin, xmax, ymin, ymax, zmin, zmax
   character(100) :: table
   character(30) :: filecircumplanetary, gasfield
@@ -55,7 +55,7 @@ program CIRCUMPLANETARY
    call system('mkdir circumplanetary_data')
 
    !Read the data form the input_circumplanetary.dat file
-   call read_input_circumplanetary(NXYZ,itertot, limits, ENES)
+   call read_input_cpd(NXYZ,itermin, itertot, iterjump, limits, ENES, ptype)
 
   end if
 
@@ -65,17 +65,26 @@ program CIRCUMPLANETARY
       tenes = 2
       tnxyz = 3
       titertot = 4
+      titermin = 5
+      titerjump = 6
+      tptype = 7
       if ( rank > 0 ) then
         call MPI_RECV(limits,6,MPI_REAL8,0,tlims,MPI_COMM_WORLD,status,ierr) 
         call MPI_RECV(ENES,6,MPI_INTEGER,0,tenes,MPI_COMM_WORLD,status,ierr) 
         call MPI_RECV(NXYZ,3,MPI_INTEGER,0,tnxyz,MPI_COMM_WORLD,status,ierr) 
         call MPI_RECV(itertot,1,MPI_INTEGER,0,titertot,MPI_COMM_WORLD,status,ierr) 
+        call MPI_RECV(itermin,1,MPI_INTEGER,0,titermin,MPI_COMM_WORLD,status,ierr) 
+        call MPI_RECV(iterjump,1,MPI_INTEGER,0,titerjump,MPI_COMM_WORLD,status,ierr) 
+        call MPI_RECV(ptype,1,MPI_CHARACTER,0,tptype,MPI_COMM_WORLD,status,ierr) 
       else if ( rank == 0 ) then
         do i = 1, nprocs - 1 
           call MPI_SEND(limits,6,MPI_REAL8,i,tlims,MPI_COMM_WORLD,status,ierr) 
           call MPI_SEND(ENES,6,MPI_INTEGER,i,tenes,MPI_COMM_WORLD,status,ierr) 
           call MPI_SEND(NXYZ,3,MPI_INTEGER,i,tnxyz,MPI_COMM_WORLD,status,ierr) 
           call MPI_SEND(itertot,1,MPI_INTEGER,i,titertot,MPI_COMM_WORLD,status,ierr) 
+          call MPI_SEND(itermin,1,MPI_INTEGER,i,titermin,MPI_COMM_WORLD,status,ierr) 
+          call MPI_SEND(iterjump,1,MPI_INTEGER,i,titerjump,MPI_COMM_WORLD,status,ierr) 
+          call MPI_SEND(ptype,1,MPI_INTEGER,i,tptype,MPI_COMM_WORLD,status,ierr) 
         end do
       end if
 
