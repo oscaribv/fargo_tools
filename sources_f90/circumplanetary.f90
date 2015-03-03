@@ -128,21 +128,22 @@ program CIRCUMPLANETARY
   if ( rank == 0 ) then
 
     !create input.dat to run the output files of this program
-    !with readbinaryall.f90 or trans_to_csv.f90
+    !with trans_to_csv.f90
     open(13,file='circumplanetary_data/input.dat')
    
       write(13,*),sizex,'    !NX' 
       write(13,*),sizey,'    !NY' 
       write(13,*),sizez,'    !NZ' 
+      write(13,*),itermin, '    !itermin'
       write(13,*),itertot, '    !itertot'
-      write(13,*),xmin, '    !theta min' 
-      write(13,*),xmax, '    !theta max' 
-      write(13,*),ymin, '    !r min' 
-      write(13,*),ymax, '    !r max' 
-      write(13,*),zmin, '    !z min' 
-      write(13,*),zmax, '    !zmax' 
-      write(13,*),'z    !type of plot' 
-      write(13,*),'1    !make cut here' 
+      write(13,*),iterjump, '    !iterjump'
+      write(13,*),xmin, '    !X min' 
+      write(13,*),xmax, '    !X max' 
+      write(13,*),ymin, '    !R min' 
+      write(13,*),ymax, '    !R max' 
+      write(13,*),zmin, '    !Z min' 
+      write(13,*),zmax, '    !Z max' 
+      write(13,*),ptype,'    !type of plot' 
 
     close(13)
  
