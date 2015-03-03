@@ -167,8 +167,8 @@ program CIRCUMPLANETARY
 
 
   !Let's divide all the work between all the processors
-  iter = rank + 1
-
+  iter = rank + iterjump * rank
+  !Start the work now!
   do while ( iter <= itertot )  
 
     print*,'Transforming output = ',iter,' in processor ',rank + 1
@@ -318,7 +318,7 @@ access="direct", recl = NX*NY*NZ*8)
 !----------------------------------------------------------------------
 
   !Make a jump as big as the number of processors
-  iter = iter + nprocs
+  iter = iter + iterjump * nprocs
 
 !----------------------------------------------------------------------
 !    At this point all the variables that ocupates RAM are recycled
