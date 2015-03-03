@@ -1,8 +1,4 @@
-! ----------------------------------------------------------------
-! This program reads the binary files of fargo3d and convert    --
-! them to ascii files, to generate automatically png files and  --
-! mpg videos.                                                   --
-! Created by Barragán O. and Rendón F. since Oct-15-2014        --
+
 ! ----------------------------------------------------------------
 ! Modified to substract a subset of the binary data, to obtan the-
 ! circumplanetary disk directly by Oscar Barragán, Oct-21-2014   -
@@ -55,8 +51,7 @@ program CIRCUMPLANETARY
   !Let the first processor do all this work
   if ( rank == 0 ) then
 
-   !Let's be sure that the directory is free
-   call system('rm -r circumplanetary_data')
+   !Creating circumplanetary disk directory
    call system('mkdir circumplanetary_data')
 
    !Read the data form the input_circumplanetary.dat file
@@ -112,7 +107,7 @@ program CIRCUMPLANETARY
   dy = ( limits(4) - limits(3) ) / (NY - 1)
   dz = ( limits(6) - limits(5) ) / (NZ - 1)
 
-  !Get the new grid limits taking in account the position when we want to cut
+  !Get the new grid limits taking in account the position where we want to cut
   xmin = limits(1) + (NXmin - 1) * dx  
   xmax = limits(1) + (NXmax - 1) * dx  
   ymin = limits(3) + (NYmin - 1) * dy  
