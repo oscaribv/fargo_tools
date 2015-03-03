@@ -4,7 +4,7 @@
 ! circumplanetary disk directly by Oscar Barragán, Oct-21-2014   -
 !-----------------------------------------------------------------
 
-program CIRCUMPLANETARY
+program EXTRACTER
 
 !-----------------------------------------------------------------
 !       Variables declaration                                   --
@@ -351,4 +351,4 @@ access="direct", recl = NX*NY*NZ*8)
 !    THE PROGRAM ENDS HERE
 !----------------------------------------------------------------------
 
-end program CIRCUMPLANETARY
+end program EXTRACTER
