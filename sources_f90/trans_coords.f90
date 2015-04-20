@@ -65,7 +65,8 @@ subroutine carte2carte(NX,NY,NZ,dendata,vydata,vxdata,vzdata,endata,ymin,ymax,xm
           !Now I know the values of the coordinates in cartesian coordinates,
           !and also the vector components, lets write it in the output file
           !before I forger it          
-          write(101,*) x,',',  y,',', z,',', den,',', vx,',', vy,',', vz,',', en
+          write(101,13) x,',',  y,',', z,',', den,',', vx,',', vy,',', vz,',', en
+          13 format(d10.5,a1)
 
           !Jump in x
           x = x + dx
@@ -227,7 +228,6 @@ subroutine sph2carte(NX,NY,NZ,dendata,vrdata,vazdata,vcoldata,endata,rmin,rmax,a
 
    !Open the file, this will be the output file
    open(unit=101, file=trim(filename), status="unknown")
-   open(unit=101, file=trim(filename), status="unknown")
 
    !Calculates the size of the jumps
    dtaz = (azmax - azmin) / real(NX-1) !It must be periodic!
@@ -289,7 +289,9 @@ subroutine sph2carte(NX,NY,NZ,dendata,vrdata,vazdata,vcoldata,endata,rmin,rmax,a
           !Now I know the values of the coordinates in cartesian coordinates,
           !and also the vector components, lets write it in the output file
           !before I forger it          
-          write(101,*) x,',', y,',', z,',', den,',', vx,',', vy,',', vz,',', en
+          write(101,13) x,',', y,',', z,',', den,',', vx,',', vy,',', vz,',', en
+          13 format(E14.7,a1,E14.7,a1,E14.7,a1,E14.7,a1,E14.7,a1, &
+                    E14.7,a1,E14.7,a1,E14.7,a1)
           
           !Jump is azimuth
           az = az + dtaz
