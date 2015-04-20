@@ -53,7 +53,7 @@ end subroutine read_input
 !NZmin,
 !NZmax,
 
-subroutine read_input_cpd(NXYZ,itermin,itertot,iterjump,limits,ENES,ptype)
+subroutine read_input_extracter(NXYZ,itermin,itertot,iterjump,limits,ENES,ptype)
 
  implicit none
 
@@ -65,7 +65,7 @@ subroutine read_input_cpd(NXYZ,itermin,itertot,iterjump,limits,ENES,ptype)
  character(len=1) :: ptype
 
  !the input file must be called input.dat
- open(13,file='input_cpd.dat',status='old')
+ open(13,file='input_ext.dat',status='old')
  !start to read the parameters
    read(13,*),NXYZ(1)
    read(13,*),NXYZ(2)
@@ -88,4 +88,4 @@ subroutine read_input_cpd(NXYZ,itermin,itertot,iterjump,limits,ENES,ptype)
    read(13,*),ptype
  close(13) 
 
-end subroutine read_input_cpd
+end subroutine read_input_extracter
