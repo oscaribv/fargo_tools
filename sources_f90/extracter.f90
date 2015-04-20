@@ -1,8 +1,12 @@
-
-! ----------------------------------------------------------------
-! Modified to substract a subset of the binary data, to obtan the-
-! circumplanetary disk directly by Oscar Barragán, Oct-21-2014   -
-!-----------------------------------------------------------------
+!---------------------------------------------------------------------------------------!
+!                                      extracter.f90
+!                               Written by O. Barragán (Oct-21-2014)
+!       It takes the original NX x NY x NZ binary files, then creates new binary
+!       arrays with sizes (NXmax - MXmin) x (NYmax - NYmin) x (NZmax - MZmin),
+!       these values are set in the input_ext.dat file. 
+!       The new files can be transformed to csv files with t2csv, this allows a
+!       faster analysis.
+!---------------------------------------------------------------------------------------!
 
 program EXTRACTER
 
@@ -32,7 +36,7 @@ program EXTRACTER
   integer :: itertot, itermin, iterjump
   real*8 :: limits(6) ! xmin, xmax, ymin, ymax, zmin, zmax
   character(100) :: table
-  character(30) :: filecircumplanetary, gasfield
+  character(30) :: fileextracter, gasfield
   integer :: iter, ind
   character(1) :: ptype
   integer :: ENES(6), NXmin, NXmax, NYmin, NYmax, NZmin, NZmax
@@ -52,41 +56,41 @@ program EXTRACTER
   if ( rank == 0 ) then
 
    !Creating circumplanetary disk directory
-   call system('mkdir circumplanetary_data')
+   call system('mkdir extracter_files')
 
    !Read the data form the input_circumplanetary.dat file
-   call read_input_cpd(NXYZ,itermin, itertot, iterjump, limits, ENES, ptype)
+   call read_input_extracter(NXYZ,itermin, itertot, iterjump, limits, ENES, ptype)
 
   end if
 
   !First processor, tell to the other processors what you read
   if (nprocs > 1 ) then
-      tlims = 1
-      tenes = 2
-      tnxyz = 3
-      titertot = 4
-      titermin = 5
-      titerjump = 6
-      tptype = 7
-      if ( rank > 0 ) then
-        call MPI_RECV(limits,6,MPI_REAL8,0,tlims,MPI_COMM_WORLD,status,ierr) 
-        call MPI_RECV(ENES,6,MPI_INTEGER,0,tenes,MPI_COMM_WORLD,status,ierr) 
-        call MPI_RECV(NXYZ,3,MPI_INTEGER,0,tnxyz,MPI_COMM_WORLD,status,ierr) 
-        call MPI_RECV(itertot,1,MPI_INTEGER,0,titertot,MPI_COMM_WORLD,status,ierr) 
-        call MPI_RECV(itermin,1,MPI_INTEGER,0,titermin,MPI_COMM_WORLD,status,ierr) 
-        call MPI_RECV(iterjump,1,MPI_INTEGER,0,titerjump,MPI_COMM_WORLD,status,ierr) 
-        call MPI_RECV(ptype,1,MPI_CHARACTER,0,tptype,MPI_COMM_WORLD,status,ierr) 
-      else if ( rank == 0 ) then
-        do i = 1, nprocs - 1 
-          call MPI_SEND(limits,6,MPI_REAL8,i,tlims,MPI_COMM_WORLD,status,ierr) 
-          call MPI_SEND(ENES,6,MPI_INTEGER,i,tenes,MPI_COMM_WORLD,status,ierr) 
-          call MPI_SEND(NXYZ,3,MPI_INTEGER,i,tnxyz,MPI_COMM_WORLD,status,ierr) 
-          call MPI_SEND(itertot,1,MPI_INTEGER,i,titertot,MPI_COMM_WORLD,status,ierr) 
-          call MPI_SEND(itermin,1,MPI_INTEGER,i,titermin,MPI_COMM_WORLD,status,ierr) 
-          call MPI_SEND(iterjump,1,MPI_INTEGER,i,titerjump,MPI_COMM_WORLD,status,ierr) 
-          call MPI_SEND(ptype,1,MPI_INTEGER,i,tptype,MPI_COMM_WORLD,status,ierr) 
-        end do
-      end if
+    tlims =     1
+    tenes =     2
+    tnxyz =     3
+    titertot =  4
+    titermin =  5
+    titerjump = 6
+    tptype =    7
+    if ( rank > 0 ) then
+      call MPI_RECV(limits,  6,MPI_REAL8,    0,tlims    ,MPI_COMM_WORLD,status,ierr) 
+      call MPI_RECV(ENES,    6,MPI_INTEGER,  0,tenes    ,MPI_COMM_WORLD,status,ierr) 
+      call MPI_RECV(NXYZ,    3,MPI_INTEGER,  0,tnxyz    ,MPI_COMM_WORLD,status,ierr) 
+      call MPI_RECV(itertot, 1,MPI_INTEGER,  0,titertot ,MPI_COMM_WORLD,status,ierr) 
+      call MPI_RECV(itermin, 1,MPI_INTEGER,  0,titermin ,MPI_COMM_WORLD,status,ierr) 
+      call MPI_RECV(iterjump,1,MPI_INTEGER,  0,titerjump,MPI_COMM_WORLD,status,ierr) 
+      call MPI_RECV(ptype,   1,MPI_CHARACTER,0,tptype   ,MPI_COMM_WORLD,status,ierr) 
+    else if ( rank == 0 ) then
+      do i = 1, nprocs - 1 
+        call MPI_SEND(limits,  6,MPI_REAL8,    i,tlims,    MPI_COMM_WORLD,status,ierr) 
+        call MPI_SEND(ENES,    6,MPI_INTEGER,  i,tenes,    MPI_COMM_WORLD,status,ierr) 
+        call MPI_SEND(NXYZ,    3,MPI_INTEGER,  i,tnxyz,    MPI_COMM_WORLD,status,ierr) 
+        call MPI_SEND(itertot, 1,MPI_INTEGER,  i,titertot, MPI_COMM_WORLD,status,ierr) 
+        call MPI_SEND(itermin, 1,MPI_INTEGER,  i,titermin, MPI_COMM_WORLD,status,ierr) 
+        call MPI_SEND(iterjump,1,MPI_INTEGER,  i,titerjump,MPI_COMM_WORLD,status,ierr) 
+        call MPI_SEND(ptype,   1,MPI_CHARACTER,i,tptype,   MPI_COMM_WORLD,status,ierr) 
+      end do
+    end if
 
   end if
   !Now all the processors know what is going on 
@@ -129,7 +133,7 @@ program EXTRACTER
 
     !create input.dat to run the output files of this program
     !with trans_to_csv.f90
-    open(13,file='circumplanetary_data/input.dat')
+    open(13,file='extracter_files/input.dat')
    
       write(13,*),sizex,'    !NX' 
       write(13,*),sizey,'    !NY' 
@@ -157,7 +161,7 @@ program EXTRACTER
   allocate( vzdata (NX*NY*NZ) )
   allocate( endata (NX*NY*NZ) )
 
-  !allocate xdata (circumplanetary) of the new nize
+  !allocate xdata  of the new Size
   !We call it out the do, sice it will recycled for each processor in each iter
   allocate( cdendata(sizex*sizey*sizez) ) 
   allocate( cvxdata (sizex*sizey*sizez) ) 
@@ -264,14 +268,13 @@ access="direct", recl = NX*NY*NZ*8)
 !----------------------------------------------------------------------
 !       Now all the data that we want is stored in RAM, lets write it
 !       in the hard disk, the names are as the original ones but
-!       inside circumplanetary_data directory
+!       inside extracter_data directory
 !----------------------------------------------------------------------
 
-!  call create_circumplanetary_den_binaryfilename(iter,filecircumplanetary)
       !create denstiy data
   gasfield = 'gasdens'
-  call createfieldbinaryfilename(iter,gasfield,filecircumplanetary)
-  table = 'circumplanetary_data/'//trim(filecircumplanetary)
+  call createfieldbinaryfilename(iter,gasfield,fileextracter)
+  table = 'extracter_files/'//trim(fileextracter)
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
   write(23,rec=1) cdendata
@@ -279,8 +282,8 @@ access="direct", recl = NX*NY*NZ*8)
   close(23)
 
   gasfield = 'gasvx'
-  call createfieldbinaryfilename(iter,gasfield,filecircumplanetary)
-  table = 'circumplanetary_data/'//trim(filecircumplanetary)
+  call createfieldbinaryfilename(iter,gasfield,fileextracter)
+  table = 'extracter_files/'//trim(fileextracter)
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
   write(23,rec=1) cvxdata
@@ -288,8 +291,8 @@ access="direct", recl = NX*NY*NZ*8)
   close(23)
 
   gasfield = 'gasvy'
-  call createfieldbinaryfilename(iter,gasfield,filecircumplanetary)
-  table = 'circumplanetary_data/'//trim(filecircumplanetary)
+  call createfieldbinaryfilename(iter,gasfield,fileextracter)
+  table = 'extracter_files/'//trim(fileextracter)
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
   write(23,rec=1) cvydata
@@ -297,8 +300,8 @@ access="direct", recl = NX*NY*NZ*8)
   close(23)
 
   gasfield = 'gasvz'
-  call createfieldbinaryfilename(iter,gasfield,filecircumplanetary)
-  table = 'circumplanetary_data/'//trim(filecircumplanetary)
+  call createfieldbinaryfilename(iter,gasfield,fileextracter)
+  table = 'extracter_files/'//trim(fileextracter)
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
   write(23,rec=1) cvzdata
@@ -306,8 +309,8 @@ access="direct", recl = NX*NY*NZ*8)
   close(23)
 
   gasfield = 'gasenergy'
-  call createfieldbinaryfilename(iter,gasfield,filecircumplanetary)
-  table = 'circumplanetary_data/'//trim(filecircumplanetary)
+  call createfieldbinaryfilename(iter,gasfield,fileextracter)
+  table = 'extracter_files/'//trim(fileextracter)
   open(unit=23, status='unknown',file=table,form="unformatted", &
        access="direct", recl= sizex*sizey*sizez*8 )  
   write(23,rec=1) cendata
