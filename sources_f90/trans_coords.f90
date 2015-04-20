@@ -66,7 +66,8 @@ subroutine carte2carte(NX,NY,NZ,dendata,vydata,vxdata,vzdata,endata,ymin,ymax,xm
           !and also the vector components, lets write it in the output file
           !before I forger it          
           write(101,13) x,',',  y,',', z,',', den,',', vx,',', vy,',', vz,',', en
-          13 format(d10.5,a1)
+          13 format(E14.7,a1,E14.7,a1,E14.7,a1,E14.7,a1,E14.7,a1, &
+                    E14.7,a1,E14.7,a1,E14.7,a1)
 
           !Jump in x
           x = x + dx
@@ -164,7 +165,9 @@ subroutine cyl2carte(NX,NY,NZ,dendata,vrdata,vtdata,vzdata,endata,rmin,rmax,thmi
           !Now I know the values of the coordinates in cartesian coordinates,
           !and also the vector components, lets write it in the output file
           !before I forger it          
-          write(101,*) r*cos(th),',', r*sin(th),',', z,',', den,',', vx,',', vy,',', vz,',', en
+          write(101,13) r*cos(th),',', r*sin(th),',', z,',', den,',', vx,',', vy,',', vz,',', en
+          13 format(E14.7,a1,E14.7,a1,E14.7,a1,E14.7,a1,E14.7,a1, &
+                    E14.7,a1,E14.7,a1,E14.7,a1)
 
           !Jump in azimuth
           th = th + dth
