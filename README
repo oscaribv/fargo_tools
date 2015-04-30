@@ -1,44 +1,68 @@
-#----------------------------------------------------------#
-#	 		fargo_tools                        #
-#     Written by Barragán O., Rendón F. & Álvarez R.       #
-#----------------------------------------------------------#
+#----------------------------------------------------------------#
+#     	 	            fargo_tools                          #
+#   Written by Barragán O., Rendón F. & Álvarez R. 2015          #
+#----------------------------------------------------------------#
+#Updated April 30, 2015
 
-This set of tools allow to work with FARGO3D outputs.
+*This is a set of tools which allow to work with FARGO3D outputs.
+*It uses OPENMP to work with different files with several proccesors.
+*A fast manual to use fargo_tools is in the fargo_tools root, it is
+ called manual.pdf, it will appear as an appendix in Barragán O., 2015,
+ Master Thesis.
 
-#---------------------------------------------------------
-#			sources_f90
-#---------------------------------------------------------
+#---------------------------------------------------------------#
+#		     	sources_f90				#
+#---------------------------------------------------------------#
 
-All f90 files are inside this directory. A brief description
-is done in the next lines.
-
-#avden.f90
-
-
-#circumplanetary.f90
-
+All f90 files are inside the sources_f90. A brief description
+of each file is given in next lines.
 
 #create_names.f90
-
+It contains subroutines to work with the filenames.
+It is called by t2csv.f90 and extracter.f90
 
 #input_file.f90
-
-
-#readbinaryall.f90
-
-
-#reader.f90
-
+It contains subroutines to read the input files.
+It is called by t2csv.f90 and extracter.f90
 
 #trans_coords.f90
-Inside this file there are all the subroutines that transform
-the fargo output files into csv files.
-These subroutines are called in main routines such as
-trans_to_csv.f90
+Inside this file there are all the subroutines which transform
+the binary FARGO3D output files into csv files.
+A detailed description of how the coordinates are transformed will
+appear in Barragán O. 2015, Master Thesis.
+This file is used by t2csv.f90
 
-#trans_to_csv.f90
-This file takes the fargo output files and transforms them to
-csv files.
+#t2csv.f90
+This file takes the default binary FARGO3D output files and transforms 
+them to csv files.
+It uses create_names.f90, input_file.f90 and trans_coords.f90
+
+#extracter.f90
+This file allows to extract a chosen region from the default binary FARGO3D
+output files. The output files are also binary files, but with a lower size,
+these files can be transformed to csv format with t2csv.
 
 
+#---------------------------------------------------------------#
+#		     	PARALLELIZATION				#
+#---------------------------------------------------------------#
 
+For high resolution simulations, there are millions of points which need to be 
+transformed by the previous described subroutines, the process can take several 
+minutes to work with just a file. For runs with hundred of outputs, this can reach
+some days of data transformation. In order to avoid this, the previous 
+described subroutines were parallelized using OPENMP to run in several CPU's at the same time. 
+
+The parallelization was not made with the aim to transform a file with multiple cores,
+instead of this, it was made with the objective to manipulate multiple files at the same time,
+ each file with a different CPU. The parallelization is worthless if transformation is 
+just for one file. But if the number of files to be transformed is greater than one, 
+the paralellization will be effective. This parallelization allows a maximum speed up of 
+the order of N in some cases, where N is the number of computer cores.
+	
+#---------------------------------------------------------------#
+#		     	ACKNOWLEDGEMENTS			#
+#---------------------------------------------------------------#
+
+We thank to Dr. Erick Nagel for his support to realize this work and his
+time to  read and comment these files.
