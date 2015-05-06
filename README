@@ -2,28 +2,31 @@
 #     	 	            fargo_tools                          #
 #   Written by Barragán O., Rendón F. & Álvarez R. 2015          #
 #----------------------------------------------------------------#
-#Updated April 30, 2015
+#Updated May 5, 2015
 
-*This is a set of tools which allow to work with FARGO3D outputs.
+*This is a set of tools which allows to work with the outputs of the
+ FARGO3D code.
 *It uses OPENMP to work with different files with several proccesors.
-*A fast manual to use fargo_tools is in the fargo_tools root, it is
- called manual.pdf, it will appear as an appendix in Barragán O., 2015,
- Master Thesis.
+*A fast manual to use fargo_tools is in the fargo_tools root, which is
+ called manual.pdf. It includes how to use t2csv and how to visualize
+ the 3D data with paraview.
+ Actually, the manual to use extracter is not included. 
+ It will appear as an appendix in Barragán O., 2015, Master Thesis.
 
 #---------------------------------------------------------------#
 #		     	sources_f90				#
 #---------------------------------------------------------------#
 
 All f90 files are inside the sources_f90. A brief description
-of each file is given in next lines.
+of each file is given in the following lines.
 
 #create_names.f90
 It contains subroutines to work with the filenames.
-It is called by t2csv.f90 and extracter.f90
+It is used by t2csv.f90 and extracter.f90
 
 #input_file.f90
 It contains subroutines to read the input files.
-It is called by t2csv.f90 and extracter.f90
+It is used by t2csv.f90 and extracter.f90
 
 #trans_coords.f90
 Inside this file there are all the subroutines which transform
@@ -33,14 +36,13 @@ appear in Barragán O. 2015, Master Thesis.
 This file is used by t2csv.f90
 
 #t2csv.f90
-This file takes the default binary FARGO3D output files and transforms 
-them to csv files.
+This file transforms the default binary FARGO3D output files to csv files.
 It uses create_names.f90, input_file.f90 and trans_coords.f90
 
 #extracter.f90
-This file allows to extract a chosen region from the default binary FARGO3D
-output files. The output files are also binary files, but with a lower size,
-these files can be transformed to csv format with t2csv.
+This file allows to extract a specific region from the default binary FARGO3D
+output files. The output files are also binary files with a lower size.
+These files can be transformed to csv format with t2csv.
 
 
 #---------------------------------------------------------------#
@@ -48,15 +50,15 @@ these files can be transformed to csv format with t2csv.
 #---------------------------------------------------------------#
 
 For high resolution simulations, there are millions of points which need to be 
-transformed by the previous described subroutines, the process can take several 
-minutes to work with just a file. For runs with hundred of outputs, this can reach
-some days of data transformation. In order to avoid this, the previous 
-described subroutines were parallelized using OPENMP to run in several CPU's at the same time. 
+transformed by the subroutines described previously. The process can take several 
+minutes to work with just a file. For runs with hundred of outputs, this can take
+some days of data transformation. In order to avoid that, such subroutines  
+were parallelized using OPENMP to run in several CPU's at the same time. 
 
-The parallelization was not made with the aim to transform a file with multiple cores,
-instead of this, it was made with the objective to manipulate multiple files at the same time,
- each file with a different CPU. The parallelization is worthless if transformation is 
-just for one file. But if the number of files to be transformed is greater than one, 
+The parallelization has not the purpouse of transforming a file using multiple cores.
+Its main aim is to manipulate multiple files at the same time,
+each file with a different CPU. The parallelization is worthless if transformation is 
+just to one file. But if the number of files to be transformed is greater than one, 
 the paralellization will be effective. This parallelization allows a maximum speed up of 
 the order of N in some cases, where N is the number of computer cores.
 	
