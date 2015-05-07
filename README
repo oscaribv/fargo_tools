@@ -2,7 +2,7 @@
 #     	 	            fargo_tools                          #
 #   Written by Barragán O., Rendón F. & Álvarez R. 2015          #
 #----------------------------------------------------------------#
-#Updated May 5, 2015
+#Updated May 7, 2015
 
 *This is a set of tools which allows to work with the outputs of the
  FARGO3D code.
@@ -12,6 +12,7 @@
  the 3D data with paraview.
  Actually, the manual to use extracter is not included. 
  It will appear as an appendix in Barragán O., 2015, Master Thesis.
+*It is realeased under the GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007.
 
 #---------------------------------------------------------------#
 #		     	sources_f90				#
