@@ -258,28 +258,28 @@ subroutine sph2carte(NX,NY,NZ,dendata,vrdata,vazdata,vcoldata,endata,rmin,rmax,a
           en = log10(endata(i+(j-1)*NX+(k-1)*NX*NY))
 
           !Obtain x,y,z from spherical coordinates          
-          x = r * sin(col)
-          y = x * sin(az)
-          x = x * cos(az)
-          z = r * cos(col)
+          x = r * dsin(col)
+          y = x * dsin(az)
+          x = x * dcos(az)
+          z = r * dcos(col)
 
           !transforming the velocity components, these have to be transformed as
           !vectors components, more details in O. Barragán, 2015, Master thesis
 
           !dx derivatives
-          dxdr = sin(col) * cos(az)
-          dxdaz =  - r * sin(col) * sin(az)
-          dxdcol = r * cos (col) * cos(az)
+          dxdr = dsin(col) * dcos(az)
+          dxdaz =  - r * dsin(col) * dsin(az)
+          dxdcol = r * dcos (col) * dcos(az)
 
           !dy derivatives
-          dydr = sin(col) * sin(az)
-          dydaz = r * sin(col) * cos(az)
-          dydcol = r * cos(col) * sin(az)
+          dydr = dsin(col) * dsin(az)
+          dydaz = r * dsin(col) * dcos(az)
+          dydcol = r * dcos(col) * dsin(az)
 
           !dz derivatives
-          dzdr = cos(col)
+          dzdr = dcos(col)
           dzdaz = 0.0
-          dzdcol = - r * sin(col)
+          dzdcol = - r * dsin(col)
 
           !Let's transform the velocities
           vx = dxdr * vr + dxdcol * vcol + dxdaz * vaz         
