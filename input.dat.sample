@@ -1,14 +1,14 @@
-128     #Number of cells in the X direction
-128     #Number of cells in the Y direction
-128     #Number of cells in the Z direction
-0       #minimum output file to be transformed
-1       #maximum output file to be transformed
-1       #size of the jump between output files to be transformed
--3.1416 #Min value in X direction 
-3.1416  #Max value in X direction 
-0.4     #Min value in Y direction 
-2.5     #Max value in Y direction 
-1.42    #Min value in Z direction 
-1.72    #Max value in Z direction 
-s       #s for spherical, c for cylindrical, r for cartesian
+100      #Number of cells in the X direction
+80       #Number of cells in the Y direction
+40       #Number of cells in the Z direction
+0        #minimum output file to be transformed
+10       #maximum output file to be transformed
+1        #size of the jump between output files to be transformed
+-3.14159 #Min value in X direction 
+3.14159  #Max value in X direction 
+0.6      #Min value in Y direction 
+1.5      #Max value in Y direction 
+1.42     #Min value in Z direction 
+1.72     #Max value in Z direction 
+s        #s for spherical, c for cylindrical, r for cartesian
 
