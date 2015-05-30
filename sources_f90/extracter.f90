@@ -347,6 +347,9 @@ access="direct", recl = NX*NY*NZ*8)
   !Wait until all the processors finish
   call MPI_BARRIER(MPI_COMM_WORLD,ierr) 
 
+  if (rank == 0 ) print*,'The new (smaller) binary files have been created &
+                          inside extracter_files directory'
+
   !END MPI CALL
   call MPI_FINALIZE(ierr)
 
