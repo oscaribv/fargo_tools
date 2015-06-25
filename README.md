@@ -109,3 +109,8 @@ time to  read and comment these files.
 * Oscar Barragán thanks to Dr. F. Masset and Dra. G. Koenigsberger for the "Escuela de
 Verano y supercómputo paralelo y GPU's" in Instituto de Ciencias Físicas, UNAM, Cuernavaca,
 Morelos, Méx. 2014. Financed by CONACyT, grant 129343.
+
+## Examples
+
+![](images/fluxes.png?raw=true)
+![](images/nice3dview.png?raw=true)
