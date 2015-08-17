@@ -8,11 +8,8 @@
  
 * It uses OPENMP to work with different files with several proccesors.
 
-* A fast manual to use fargo_tools is in the fargo_tools root, which is
- called manual.pdf. 
- It includes how to use t2csv and how to visualize the 3D data with paraview.
- Actually, the manual to use extracter is not included. 
- It will appear as an appendix in Barragán O., 2015, Master Thesis.
+* A fast manual to use fargo_tools is in the fargo_tools can be found in https://www.researchgate.net/publication/281035853_fargo_tools_manual. 
+ This manual also appears as an appendix in Barragán O., 2015, Master Thesis.
  
 * It is realeased under the GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007.
 
