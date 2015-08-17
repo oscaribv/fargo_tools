@@ -1,7 +1,7 @@
 # __fargo_tools__                         
 ## Written by Barragán O., Rendón F. & Álvarez R. 2015          
 #### email: oscaribv@gmail.com			 
-#### Updated Jun 25, 2015
+#### Updated Aug 17, 2015
 
 * This is a set of tools which allows to work with the outputs of the
  FARGO3D code.
