@@ -1,15 +1,16 @@
 # __fargo_tools__                         
 ## Written by Barragán O., Rendón F. & Álvarez R. 2015          
 #### email: oscaribv@gmail.com			 
-#### Updated Aug 17, 2015
+#### Updated Sep 04, 2015
 
 * This is a set of tools which allows to work with the outputs of the
  FARGO3D code.
  
 * It uses OPENMP to work with different files with several proccesors.
 
-* A fast manual to use fargo_tools is in the fargo_tools can be found in https://www.researchgate.net/publication/281035853_fargo_tools_manual. 
- This manual also appears as an appendix in Barragán O., 2015, Master Thesis.
+* A fast manual to use fargo_tools is in the fargo_tools can be found in the  
+  appendix of Barragán O., 2015, Master Thesis.
+  link -> https://www.researchgate.net/publication/281461299_On_the_stability_of_circumplanetary_disks
  
 * It is realeased under the GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007.
 
