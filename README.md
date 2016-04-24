@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/21126/oscaribv/fargo_tools.svg)](https://zenodo.org/badge/latestdoi/21126/oscaribv/fargo_tools)
+
 # __fargo_tools__                         
 ## Written by Barragán O., Rendón F. & Álvarez R. 2015          
 #### email: oscaribv@gmail.com			 
